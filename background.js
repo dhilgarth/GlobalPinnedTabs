@@ -87,8 +87,15 @@ var GlobalPinnedTabs = {
         var url;
         for (var key in GlobalPinnedTabs.tabIdToUrlMapping) {
             url = GlobalPinnedTabs.tabIdToUrlMapping[key];
-            if (GlobalPinnedTabs.getMatchingTab(url, window) === undefined)
+            var matchingTab = GlobalPinnedTabs.getMatchingTab(url, window);
+            if (matchingTab === undefined)
                 GlobalPinnedTabs.moveTab(window.id, key);
+            else {
+                delete GlobalPinnedTabs.tabIdToUrlMapping[key];
+                GlobalPinnedTabs.tabIdToUrlMapping[matchingTab.id] = url;
+                GlobalPinnedTabs.urlToTabIdMapping[url] = matchingTab.id;
+                chrome.tabs.remove(parseInt(key));
+            }
         }
 
         for (var i = 0; i < GlobalPinnedTabs.globalPinnedTabUrls.length; i++) {
@@ -120,21 +127,19 @@ var GlobalPinnedTabs = {
         }
     },
 
-    disableTabCloseHandling: false,
-    disableTabUpdateHandling: false,
-
     onTabClose: function(tabId, removeInfo) {
-        if (!removeInfo.isWindowClosing && !GlobalPinnedTabs.disableTabCloseHandling)
-            GlobalPinnedTabs.handleRemovedTab(tabId);
+        GlobalPinnedTabs.handleRemovedTab(tabId, !removeInfo.isWindowClosing);
     },
 
-    handleRemovedTab: function(tabId) {
+    handleRemovedTab: function(tabId, removeUrl) {
         var url = GlobalPinnedTabs.tabIdToUrlMapping[tabId];
         if (url) {
             delete GlobalPinnedTabs.tabIdToUrlMapping[tabId];
             delete GlobalPinnedTabs.urlToTabIdMapping[tabId];
-            GlobalPinnedTabs.globalPinnedTabUrls.remove(url);
-            GlobalPinnedTabs.persistData();
+            if(removeUrl) {
+                GlobalPinnedTabs.globalPinnedTabUrls.remove(url);
+                GlobalPinnedTabs.persistData();
+            }
         }
     },
 
