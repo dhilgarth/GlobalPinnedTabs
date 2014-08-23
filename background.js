@@ -50,6 +50,12 @@ var GlobalPinnedTabs = {
         chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdate);
         chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClose);
 
+        chrome.alarms.onAlarm.addListener(function(alarm) {
+            if (alarm.name === 'Try moving tab again') {
+                GlobalPinnedTabs.moveTab(GlobalPinnedTabs.windowId, GlobalPinnedTabs.tabId);
+            }
+        });
+
         chrome.windows.getCurrent({
             populate: true
         }, function(window) {
@@ -58,12 +64,26 @@ var GlobalPinnedTabs = {
     },
 
     pinTab: function(tab) {
-        chrome.tabs.update(tab.id, {
-            pinned: true
-        });
+        var lastError = chrome.runtime.lastError;
+        if (tab === undefined || lastError !== undefined) {
+            console.log("Couldn't move tab.");
+            if(lastError !== undefined && lastError.message)
+                console.log('Reason: '+ lastError.message);
+            chrome.alarms.create('Try moving tab again', {
+                when: Date.now() + 300
+            });
+
+        } else {
+            chrome.tabs.update(tab.id, {
+                pinned: true
+            });
+        }
     },
 
     moveTab: function(windowId, tabId) {
+        GlobalPinnedTabs.tabId = tabId;
+        GlobalPinnedTabs.windowId = windowId;
+
         chrome.tabs.move(parseInt(tabId), {
             windowId: windowId,
             index: 0
@@ -79,7 +99,8 @@ var GlobalPinnedTabs = {
             GlobalPinnedTabs.displayTabs(window);
         });
     },
-
+    windowId: undefined,
+    tabId: undefined,
     displayTabs: function(window) {
         if (window.type === 'popup')
             return;
