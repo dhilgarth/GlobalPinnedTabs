@@ -74,7 +74,6 @@ var GlobalPinnedTabs = {
             });
 
         } else {
-            console.log(tabs);
             var enableUpdateHandling = function(tab) {
                 GlobalPinnedTabs.disableTabUpdateHandling = false;
             };
@@ -181,9 +180,11 @@ var GlobalPinnedTabs = {
         if (url) {
             delete GlobalPinnedTabs.tabIdToUrlMapping[tabId];
             delete GlobalPinnedTabs.urlToTabIdMapping[url];
+            console.log('deleted tab');
             if (removeUrl) {
                 GlobalPinnedTabs.globalPinnedTabUrls.remove(url);
                 GlobalPinnedTabs.persistData();
+                console.log('deleted url');
             }
         }
     },
@@ -199,6 +200,7 @@ var GlobalPinnedTabs = {
         if (matchingTab !== undefined)
             GlobalPinnedTabs.createTabCallback(matchingTab);
         else {
+            console.log('Creating tab with URL ' + url);
             chrome.tabs.create({
                 'url': url,
                 'pinned': true,
