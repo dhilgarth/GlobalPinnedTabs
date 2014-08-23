@@ -37,12 +37,10 @@ var Filters = {
 var GlobalPinnedTabs = {
 
     globalPinnedTabUrls: [],
-
     tabIdToUrlMapping: {},
     urlToTabIdMapping: {},
 
     init: function() {
-
         ArrayExtensions.init();
         GlobalPinnedTabs.loadData();
         GlobalPinnedTabs.registerForChromeEvents();
