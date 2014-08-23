@@ -102,7 +102,7 @@ var GlobalPinnedTabs = {
     windowId: undefined,
     tabId: undefined,
     displayTabs: function(window) {
-        if (window.type === 'popup')
+        if (window.type !== 'normal')
             return;
 
         var url;
