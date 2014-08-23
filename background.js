@@ -51,6 +51,25 @@ var GlobalPinnedTabs = {
         chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.activeWindowChanged);
         chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdate);
         chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClose);
+        chrome.tabs.onAttached.addListener(function(tabId, attachInfo) {
+            console.debug('onAttached: ' + tabId);
+            console.debug(attachInfo);
+        });
+        chrome.tabs.onDetached.addListener(function(tabId, detachInfo) {
+            console.debug('onDetached: ' + tabId);
+            console.debug(detachInfo);
+        });
+        chrome.tabs.onMoved.addListener(function(tabId, moveInfo) {
+            console.debug('onMoved: ' + tabId);
+            console.debug(moveInfo);
+        });
+        chrome.tabs.onHighlighted.addListener(function(highlightInfo) {
+            console.debug('onHighlighted:');
+            console.debug(highlightInfo);
+        });
+        chrome.tabs.onActivated.addListener(function(activeInfo) {
+            console.debug('onActivated:');
+            console.debug(activeInfo);
         });
 
         chrome.alarms.onAlarm.addListener(function(alarm) {
@@ -126,6 +145,8 @@ var GlobalPinnedTabs = {
         chrome.windows.get(parseInt(windowId), {
             populate: true
         }, function(window) {
+            console.debug('activeWindowChanged:');
+            console.debug(window.tabs);
             GlobalPinnedTabs.displayTabs(window);
         });
     },
@@ -168,6 +189,9 @@ var GlobalPinnedTabs = {
     },
 
     onTabUpdate: function(tabId, changeInfo, tab) {
+        console.debug('onTabUpdate: ' + tabId);
+        console.debug(changeInfo);
+        console.debug(tab);
         if (GlobalPinnedTabs.disableTabUpdateHandling)
             return;
         if (changeInfo.pinned !== undefined) {
