@@ -109,9 +109,9 @@ var GlobalPinnedTabs = {
         for (var key in GlobalPinnedTabs.tabIdToUrlMapping) {
             url = GlobalPinnedTabs.tabIdToUrlMapping[key];
             var matchingTab = GlobalPinnedTabs.getMatchingTab(url, window);
-            if (matchingTab === undefined)
+            if (matchingTab === undefined) {
                 GlobalPinnedTabs.moveTab(window.id, key);
-            else {
+            } else if (key != matchingTab.id) {
                 delete GlobalPinnedTabs.tabIdToUrlMapping[key];
                 GlobalPinnedTabs.tabIdToUrlMapping[matchingTab.id] = url;
                 GlobalPinnedTabs.urlToTabIdMapping[url] = matchingTab.id;
