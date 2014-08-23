@@ -156,8 +156,8 @@ var GlobalPinnedTabs = {
         var url = GlobalPinnedTabs.tabIdToUrlMapping[tabId];
         if (url) {
             delete GlobalPinnedTabs.tabIdToUrlMapping[tabId];
-            delete GlobalPinnedTabs.urlToTabIdMapping[tabId];
-            if(removeUrl) {
+            delete GlobalPinnedTabs.urlToTabIdMapping[url];
+            if (removeUrl) {
                 GlobalPinnedTabs.globalPinnedTabUrls.remove(url);
                 GlobalPinnedTabs.persistData();
             }
