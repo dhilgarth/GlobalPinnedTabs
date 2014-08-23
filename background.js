@@ -45,22 +45,46 @@ var GlobalPinnedTabs = {
 
         ArrayExtensions.init();
         GlobalPinnedTabs.loadData();
+        GlobalPinnedTabs.registerForChromeEvents();
+        GlobalPinnedTabs.displayTabsOnCurrentWindow();
+    },
 
+    registerForChromeEvents: function() {
         chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.activeWindowChanged);
         chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdate);
         chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClose);
+        });
 
         chrome.alarms.onAlarm.addListener(function(alarm) {
             if (alarm.name === 'Try moving tab again') {
                 GlobalPinnedTabs.moveTabs(GlobalPinnedTabs.tabsToMove.target, GlobalPinnedTabs.tabsToMove.ids);
             }
         });
+    },
 
+    displayTabsOnCurrentWindow: function() {
         chrome.windows.getCurrent({
             populate: true
         }, function(window) {
             GlobalPinnedTabs.displayTabs(window);
         });
+    },
+
+    pinTabs: function(tabs) {
+
+        var tabsPinned = 0;
+        var enableUpdateHandling = function(tab) {
+            tabsPinned++;
+            if (tabsPinned === tabs.length)
+                GlobalPinnedTabs.disableTabUpdateHandling = false;
+        };
+
+        for (var i = 0; i < tabs.length; ++i) {
+            GlobalPinnedTabs.disableTabUpdateHandling = true;
+            chrome.tabs.update(tabs[i].id, {
+                pinned: true
+            }, GlobalPinnedTabs.enableUpdateHandling);
+        }
     },
 
     pinTab: function(tabs) {
@@ -74,16 +98,7 @@ var GlobalPinnedTabs = {
             });
 
         } else {
-            var enableUpdateHandling = function(tab) {
-                GlobalPinnedTabs.disableTabUpdateHandling = false;
-            };
-            for(var i = 0;i< tabs.length; ++i)
-            {
-                GlobalPinnedTabs.disableTabUpdateHandling = true;
-                chrome.tabs.update(tabs[i].id, {
-                    pinned: true
-                }, GlobalPinnedTabs.enableUpdateHandling);
-            }
+            GlobalPinnedTabs.pinTabs(tabs);
             GlobalPinnedTabs.tabsToMove.target = undefined;
             GlobalPinnedTabs.tabsToMove.ids = [];
         }
