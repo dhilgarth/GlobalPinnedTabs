@@ -52,7 +52,7 @@ var GlobalPinnedTabs = {
 
         chrome.alarms.onAlarm.addListener(function(alarm) {
             if (alarm.name === 'Try moving tab again') {
-                GlobalPinnedTabs.moveTab(GlobalPinnedTabs.windowId, GlobalPinnedTabs.tabId);
+                GlobalPinnedTabs.moveTabs(GlobalPinnedTabs.tabsToMove.target, GlobalPinnedTabs.tabsToMove.ids);
             }
         });
 
@@ -63,28 +63,46 @@ var GlobalPinnedTabs = {
         });
     },
 
-    pinTab: function(tab) {
+    pinTab: function(tabs) {
         var lastError = chrome.runtime.lastError;
-        if (tab === undefined || lastError !== undefined) {
-            console.log("Couldn't move tab.");
-            if(lastError !== undefined && lastError.message)
-                console.log('Reason: '+ lastError.message);
-            chrome.alarms.create('Try moving tab again', {
-                when: Date.now() + 300
+        if (tabs === undefined || lastError !== undefined) {
+            console.log("Couldn't move tabs.");
+            if (lastError !== undefined && lastError.message)
+                console.log('Reason: ' + lastError.message);
+            chrome.alarms.create('Try moving tabs again', {
+                when: Date.now() + 1000
             });
 
         } else {
-            chrome.tabs.update(tab.id, {
-                pinned: true
-            });
+            console.log(tabs);
+            var enableUpdateHandling = function(tab) {
+                GlobalPinnedTabs.disableTabUpdateHandling = false;
+            };
+            for(var i = 0;i< tabs.length; ++i)
+            {
+                GlobalPinnedTabs.disableTabUpdateHandling = true;
+                chrome.tabs.update(tabs[i].id, {
+                    pinned: true
+                }, GlobalPinnedTabs.enableUpdateHandling);
+            }
+            GlobalPinnedTabs.tabsToMove.target = undefined;
+            GlobalPinnedTabs.tabsToMove.ids = [];
         }
     },
 
-    moveTab: function(windowId, tabId) {
-        GlobalPinnedTabs.tabId = tabId;
-        GlobalPinnedTabs.windowId = windowId;
+    tabsToMove: {
+        target: undefined,
+        ids: []
+    },
 
-        chrome.tabs.move(parseInt(tabId), {
+    moveTabs: function(windowId, tabIds) {
+        GlobalPinnedTabs.tabsToMove.target = windowId;
+        GlobalPinnedTabs.tabsToMove.ids = tabIds;
+
+        if (tabIds.length === 0)
+            return;
+
+        chrome.tabs.move(tabIds, {
             windowId: windowId,
             index: 0
         }, GlobalPinnedTabs.pinTab);
@@ -99,18 +117,22 @@ var GlobalPinnedTabs = {
             GlobalPinnedTabs.displayTabs(window);
         });
     },
+
     windowId: undefined,
     tabId: undefined,
+    disableTabUpdateHandling: false,
+
     displayTabs: function(window) {
         if (window.type !== 'normal')
             return;
 
         var url;
+        var tabsToMove = [];
         for (var key in GlobalPinnedTabs.tabIdToUrlMapping) {
             url = GlobalPinnedTabs.tabIdToUrlMapping[key];
             var matchingTab = GlobalPinnedTabs.getMatchingTab(url, window);
             if (matchingTab === undefined) {
-                GlobalPinnedTabs.moveTab(window.id, key);
+                tabsToMove.push(parseInt(key));
             } else if (key != matchingTab.id) {
                 delete GlobalPinnedTabs.tabIdToUrlMapping[key];
                 GlobalPinnedTabs.tabIdToUrlMapping[matchingTab.id] = url;
@@ -118,6 +140,8 @@ var GlobalPinnedTabs = {
                 chrome.tabs.remove(parseInt(key));
             }
         }
+
+        GlobalPinnedTabs.moveTabs(window.id, tabsToMove);
 
         for (var i = 0; i < GlobalPinnedTabs.globalPinnedTabUrls.length; i++) {
             url = GlobalPinnedTabs.globalPinnedTabUrls[i];
