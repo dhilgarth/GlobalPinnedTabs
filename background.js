@@ -158,6 +158,7 @@ var GlobalPinnedTabs = {
     loadData: function() {
         chrome.storage.sync.get('globalPinnedTabUrls', function(items) {
             GlobalPinnedTabs.globalPinnedTabUrls = items.globalPinnedTabUrls;
+            console.log('Loaded:');
             console.log(GlobalPinnedTabs.globalPinnedTabUrls);
         });
     },
@@ -166,6 +167,8 @@ var GlobalPinnedTabs = {
         chrome.storage.sync.set({
             globalPinnedTabUrls: GlobalPinnedTabs.globalPinnedTabUrls
         });
+        console.log('Persisted:');
+        console.log(GlobalPinnedTabs.globalPinnedTabUrls);
     }
 };
 
