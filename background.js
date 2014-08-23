@@ -88,9 +88,9 @@ var GlobalPinnedTabs = {
     pinTab: function(tabs) {
         var lastError = chrome.runtime.lastError;
         if (tabs === undefined || lastError !== undefined) {
-            console.log("Couldn't move tabs.");
+            console.debug("Couldn't move tabs.");
             if (lastError !== undefined && lastError.message)
-                console.log('Reason: ' + lastError.message);
+                console.debug('Reason: ' + lastError.message);
             chrome.alarms.create('Try moving tabs again', {
                 when: Date.now() + 1000
             });
@@ -193,11 +193,11 @@ var GlobalPinnedTabs = {
         if (url) {
             delete GlobalPinnedTabs.tabIdToUrlMapping[tabId];
             delete GlobalPinnedTabs.urlToTabIdMapping[url];
-            console.log('deleted tab');
+            console.debug('deleted tab');
             if (removeUrl) {
                 GlobalPinnedTabs.globalPinnedTabUrls.remove(url);
                 GlobalPinnedTabs.persistData();
-                console.log('deleted url');
+                console.debug('deleted url');
             }
         }
     },
@@ -213,7 +213,7 @@ var GlobalPinnedTabs = {
         if (matchingTab !== undefined)
             GlobalPinnedTabs.createTabCallback(matchingTab);
         else {
-            console.log('Creating tab with URL ' + url);
+            console.debug('Creating tab with URL ' + url);
             chrome.tabs.create({
                 'url': url,
                 'pinned': true,
