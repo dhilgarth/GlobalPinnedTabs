@@ -57,6 +57,8 @@ var GlobalPinnedTabs = {
     },
 
     onTabUpdate: function(tabId, changeInfo, tab) {
+        if (GlobalPinnedTabs.disableTabUpdateHandling)
+            return;
         if (changeInfo.pinned !== undefined) {
             if (changeInfo.pinned === true) {
                 if (confirm('Make this a globally pinned tab that is visible in all windows?')) {
@@ -67,10 +69,23 @@ var GlobalPinnedTabs = {
             } else {
                 GlobalPinnedTabs.handleRemovedTab(tabId);
             }
+        } else if (changeInfo.status === 'loading' && changeInfo.url !== undefined) {
+            var url = GlobalPinnedTabs.knownPinnedTabIds[tab.id];
+            GlobalPinnedTabs.knownPinnedTabIds[tab.id] = url;
+            var tabsWithUrl = GlobalPinnedTabs.getTabsForInitialUrl(url);
+            GlobalPinnedTabs.disableTabUpdateHandling = true;
+            for (var i = 0; i < tabsWithUrl.length; i++) {
+                GlobalPinnedTabs.knownPinnedTabIds[tabsWithUrl[i]] = tab.url;
+                chrome.tabs.update(parseInt(tabsWithUrl[i]), {
+                    url: tab.url
+                });
+            }
+            GlobalPinnedTabs.disableTabUpdateHandling = false;
         }
     },
 
     disableTabCloseHandling: false,
+    disableTabUpdateHandling: false,
 
     onTabClose: function(tabId, removeInfo) {
         if (!removeInfo.isWindowClosing && !GlobalPinnedTabs.disableTabCloseHandling)
