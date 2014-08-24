@@ -142,7 +142,7 @@ GloballyPinnedTabs.prototype = {
                 }
             });
         }
-        
+
         if(dummyTabs.missingTabs.length) {
             Chrome.getWindow(sourceWindowId, function (window) {
                 for (i = 0; i < dummyTabs.missingTabs.length; i++) {
