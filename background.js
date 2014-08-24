@@ -52,6 +52,7 @@ var GlobalPinnedTabs = {
     },
 
     onTabUpdated: function (tabId, changeInfo, tab) {
+        console.log('tab updated');
         if (GlobalPinnedTabs.disableTabUpdateHandling)
             return;
         if (changeInfo.pinned !== undefined) {
@@ -68,6 +69,7 @@ var GlobalPinnedTabs = {
     },
 
     onTabClosed: function (tabId, removeInfo) {
+        console.log('tab closed');
         if (!removeInfo.isWindowClosing)
             Storage.globallyPinnedTabs.handleClosedTab(tabId);
     }
