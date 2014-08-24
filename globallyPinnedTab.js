@@ -61,7 +61,7 @@ GloballyPinnedTab.prototype = {
             tab = Chrome.findPinnedTab([this.startupUrl, this.currentUrl], window);
             if(tab)
                 chrome.tabs.remove(tab.id);
-            Chrome.createPinnedTab(window, url, this.realTab.favIconUrl, internalCallback);
+            Chrome.createPinnedTab(window, url, this.favIconUrl, internalCallback);
         }
     },
 
@@ -78,7 +78,7 @@ GloballyPinnedTab.prototype = {
 
     updateRealTab: function(realTab) {
         this.realTab = realTab;
-        if(realTab.favIconUrl != this.favIconUrl) {
+        if(realTab.favIconUrl && (realTab.favIconUrl != this.favIconUrl)) {
             this.favIconUrl = realTab.favIconUrl;
             this.sendMessageToDummyWindows('favIconUrl', this.favIconUrl);
         }
