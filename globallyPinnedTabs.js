@@ -96,7 +96,7 @@ GloballyPinnedTabs.prototype = {
 
     moveTabs: function(targetWindow, sourceWindowId, callback) {
 
-        var dummyTabs = this.getDummyTabsForWindow(targetWindow, true);
+        var dummyTabs = this.getDummyTabsForWindow(targetWindow);
         var dummyTabIds = [];
         var smallestDummyTabsIndex = 10000;
         var i;
