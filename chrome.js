@@ -85,14 +85,7 @@ var Chrome = {
         }, Chrome.errorLogger(callback));
     },
 
-    moveTabs: function (tabIds, targetWindowId, index, callback, startTime) {
-
-        startTime = startTime || Date.now();
-
-        if (Date.now() - startTime > 20000) {
-            console.error('Moving of tabs failed for 1 minute. Giving up...');
-            return;
-        }
+    moveTabs: function (tabIds, targetWindowId, index, callback) {
 
         chrome.tabs.move(tabIds, {
             windowId: targetWindowId,
