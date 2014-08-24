@@ -48,7 +48,8 @@ var GlobalPinnedTabs = {
 
     onNewWindowCreated: function(window) {
         console.log('new window');
-        Storage.globallyPinnedTabs.createTabsForWindow(window);
+        if(window.type === 'normal')
+            Storage.globallyPinnedTabs.createTabsForWindow(window);
     },
 
     onActiveWindowChanged: function(windowId) {
