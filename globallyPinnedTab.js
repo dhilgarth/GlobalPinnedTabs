@@ -82,11 +82,11 @@ GloballyPinnedTab.prototype = {
             this.favIconUrl = realTab.favIconUrl;
             this.sendMessageToDummyWindows('favIconUrl', this.favIconUrl);
         }
-        if(realTab.url != this.currentUrl) {
+        if(realTab.url && (realTab.url != this.currentUrl)) {
             this.currentUrl = realTab.url;
             this.sendMessageToDummyWindows('currentUrl', this.currentUrl);
         }
-        if(realTab.title != this.title) {
+        if(realTab.title && (realTab.title != this.title)) {
             this.title = realTab.title;
             this.sendMessageToDummyWindows('title', this.title);
         }
