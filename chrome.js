@@ -96,5 +96,9 @@ var Chrome = {
 
             Utils.handleUndefinedCallback(callback)(tabs);
         }));
+    },
+
+    removeTabs: function(tabIds, callback) {
+        chrome.tabs.remove(tabIds,  Chrome.errorLogger(callback));
     }
 };

@@ -75,7 +75,7 @@ GloballyPinnedTabs.prototype = {
     recreateTabs: function(targetWindow, callback) {
         var dummyTabs = this.getDummyTabsForWindow(targetWindow, false);
         var dummyTabIds = dummyTabs.map(function(x) { return x.id; });
-        chrome.tabs.remove(dummyTabIds);
+        Chrome.removeTabs(dummyTabIds);
         for (var i = 0; i < this.tabs.length; i++)
             this.tabs[i].createRealTab(targetWindow, callback, true); // Bug (callback)
     },
@@ -133,7 +133,7 @@ GloballyPinnedTabs.prototype = {
             finished++;
             if(finished === total) {
                 if(temporaryTabIds.length) {
-                    chrome.tabs.remove(temporaryTabIds, function () {
+                    Chrome.removeTabs(temporaryTabIds, function () {
                         if(tabToActivate)
                             tabToActivate.activate(callback);
                         else

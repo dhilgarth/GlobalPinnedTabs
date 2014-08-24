@@ -68,7 +68,7 @@ GloballyPinnedTab.prototype = {
         else {
             tab = Chrome.findPinnedTab([this.startupUrl, this.currentUrl], window);
             if(tab)
-                chrome.tabs.remove(tab.id);
+                Chrome.removeTabs(tab.id);
             Chrome.createPinnedTab(window, url, internalCallback);
         }
     },
@@ -132,7 +132,7 @@ GloballyPinnedTab.prototype = {
             tabIds.push(this.dummyTabs[key].id);
         if(this.realTab)
             tabIds.push(this.realTab.id);
-        chrome.tabs.remove(tabIds);
+        Chrome.removeTabs(tabIds);
         this.onCloseCallback(this);
     }
 };
