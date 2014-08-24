@@ -531,7 +531,7 @@
 			"file": "chrome.js",
 			"settings":
 			{
-				"buffer_size": 1783,
+				"buffer_size": 3199,
 				"line_ending": "Windows"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "globallyPinnedTab.js",
 			"settings":
 			{
-				"buffer_size": 3735,
+				"buffer_size": 4584,
 				"line_ending": "Windows"
 			}
 		},
@@ -547,8 +547,18 @@
 			"file": "globallyPinnedTabs.js",
 			"settings":
 			{
-				"buffer_size": 6009,
+				"buffer_size": 7053,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 13 files for \"windows.get\" (case sensitive)\n\nD:\\Projects\\Chrome\\GlobalPinnedTabs\\background.js:\n   66          if (windowId === chrome.windows.WINDOW_ID_NONE)\n   67              return;\n   68:         chrome.windows.get(parseInt(windowId), {\n   69              populate: true\n   70          }, function(window) {\n\nD:\\Projects\\Chrome\\GlobalPinnedTabs\\chrome.js:\n    5  \n    6      getAllWindows: function(callback) {\n    7:         chrome.windows.getAll({\n    8              populate: true\n    9          }, callback);\n\n2 matches across 2 files\n",
+			"settings":
+			{
+				"buffer_size": 554,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
@@ -563,7 +573,7 @@
 			"file": "placeholder.html",
 			"settings":
 			{
-				"buffer_size": 98,
+				"buffer_size": 187,
 				"line_ending": "Windows",
 				"name": "<html></html>"
 			}
@@ -572,7 +582,7 @@
 			"file": "placeholder.js",
 			"settings":
 			{
-				"buffer_size": 1744,
+				"buffer_size": 1415,
 				"line_ending": "Windows"
 			}
 		},
@@ -580,12 +590,28 @@
 			"file": "background.js",
 			"settings":
 			{
-				"buffer_size": 4975,
+				"buffer_size": 3099,
 				"line_ending": "Windows"
 			}
 		},
 		{
+			"contents": "{\n	// Copy any modified settings to `User/TernJS.sublime-settings`\n	// otherwise modifications will not survive updates.\n\n	// List of default TernJS definition libraries that should be\n	// loaded for every JS file and project\n	\"default_libs\": [\"ecma5\"],\n\n	// Syntax scopes where Tern completion should work.\n	// Used for augumented JS syntxes where TernJS could possibly work\n	\"syntax_scopes\": \"source.js\"\n}\n",
+			"file": "/C/Users/dhilg_000/AppData/Roaming/Sublime Text 3/Packages/TernJS/TernJS.sublime-settings",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 408,
+				"line_ending": "Windows",
+				"read_only": true,
+				"scratch": true
+			}
+		},
+		{
+			"contents": "var FavIcon = {\n    scriptToInject: function(favIconUrl) {\n        var link = document.querySelector(\"link[rel~='icon']\");\n        if (!link) {\n            link = document.createElement(\"link\");\n            link.setAttribute(\"rel\", \"shortcut icon\");\n            document.head.appendChild(link);\n        }\n\n        link.src = favIconUrl;\n    },\n\n    getActualCode: function(favIconUrl) {\n        return '(' + FavIcon.scriptToInject + ')(' + JSON.stringify(favIconUrl) + ');';\n    },\n\n    change: function(tabId, favIconUrl) {\n        console.log('FavIcon.change is currently disabled');\n        return;\n        favIconUrl = 'https://www.beeminder.com/favicon.png';\n        var actualCode = FavIcon.getActualCode(favIconUrl);\n        console.log(actualCode);\n        chrome.tabs.executeScript(tabId, {\n            code: actualCode\n        });\n    }\n};",
 			"file": "favIcon.js",
+			"file_size": -1,
+			"file_write_time": -1,
 			"settings":
 			{
 				"buffer_size": 849,
@@ -601,23 +627,10 @@
 			}
 		},
 		{
-			"contents": "{\n  \"indent_size\": 4,\n  \"indent_char\": \" \",\n  \"indent_level\": 0,\n  \"indent_with_tabs\": false,\n  \"preserve_newlines\": true,\n  \"max_preserve_newlines\": 10,\n  \"jslint_happy\": false,\n  \"brace_style\": \"collapse\",\n  \"keep_array_indentation\": false,\n  \"keep_function_indentation\": false,\n  \"space_before_conditional\": true,\n  \"break_chained_methods\": false,\n  \"eval_code\": false,\n  \"unescape_strings\": false,\n  \"wrap_line_length\": 0,\n\n  // jsbeautify options\n  \"format_on_save\": false,\n  \"use_original_indentation\": false\n}\n",
-			"file": "/C/Users/dhilg_000/AppData/Roaming/Sublime Text 3/Packages/Javascript Beautify/JavascriptBeautify.sublime-settings",
-			"file_size": -1,
-			"file_write_time": -1,
-			"settings":
-			{
-				"buffer_size": 517,
-				"line_ending": "Windows",
-				"read_only": true,
-				"scratch": true
-			}
-		},
-		{
 			"file": "manifest.json",
 			"settings":
 			{
-				"buffer_size": 550,
+				"buffer_size": 631,
 				"line_ending": "Windows"
 			}
 		}
@@ -625,9 +638,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 219.0,
 		"selected_items":
 		[
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
 			[
 				"insta",
 				"Package Control: Install Package"
@@ -717,7 +734,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 536.0
+		"width": 424.0
 	},
 	"console":
 	{
@@ -738,9 +755,9 @@
 	},
 	"file_history":
 	[
+		"/C/Users/dhilg_000/AppData/Roaming/Sublime Text 3/Packages/Javascript Beautify/JavascriptBeautify.sublime-settings",
 		"/D/Projects/Chrome/GlobalPinnedTabs/chrome.js",
 		"/D/Projects/Chrome/GlobalPinnedTabs/GlobalPinnedTabs.sublime-project",
-		"/C/Users/dhilg_000/AppData/Roaming/Sublime Text 3/Packages/Javascript Beautify/JavascriptBeautify.sublime-settings",
 		"/D/Projects/Chrome/GlobalPinnedTabs/setFavIcon.js",
 		"/D/Projects/Chrome/GlobalPinnedTabs/chrome",
 		"/D/Temp/power/power/background.js",
@@ -858,6 +875,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"windows.get",
 			"ActiveTab",
 			"activeTab",
 			"console.log",
@@ -968,7 +986,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -984,8 +1002,8 @@
 						"selection":
 						[
 							[
-								620,
-								620
+								982,
+								982
 							]
 						],
 						"settings":
@@ -1106,7 +1124,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -1115,15 +1133,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1783,
+						"buffer_size": 3199,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								180,
-								180
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1239,11 +1257,11 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.x": -0.0,
+						"translation.y": 28.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1252,15 +1270,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3735,
+						"buffer_size": 4584,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								941,
-								941
+								2544,
+								2544
 							]
 						],
 						"settings":
@@ -1378,10 +1396,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 13.0,
+						"translation.y": 643.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1390,15 +1408,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6009,
+						"buffer_size": 7053,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2380,
-								2380
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1507,20 +1525,178 @@
 							},
 							"codeintel_tooltips": "popup",
 							"incomplete_sync": null,
+							"remote_loading": false,
 							"sublime_auto_complete": true,
+							"synced": false,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 671.0,
+						"translation.y": 900.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 4,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 554,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										218,
+										229
+									],
+									[
+										448,
+										459
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								222,
+								222
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"detect_indentation": false,
+							"incomplete_sync": null,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"sublime_auto_complete": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
 					"file": "storage.js",
 					"semi_transient": false,
 					"settings":
@@ -1653,16 +1829,16 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "placeholder.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 98,
+						"buffer_size": 187,
 						"regions":
 						{
 						},
@@ -1781,23 +1957,25 @@
 							"codeintel_tooltips": "popup",
 							"incomplete_sync": null,
 							"is_xml": false,
+							"remote_loading": false,
 							"sublime_auto_complete": true,
+							"synced": false,
 							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "placeholder.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1744,
+						"buffer_size": 1415,
 						"regions":
 						{
 						},
@@ -1917,30 +2095,32 @@
 							"remote_loading": false,
 							"sublime_auto_complete": true,
 							"synced": false,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "background.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4975,
+						"buffer_size": 3099,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3683,
-								3683
+								3099,
+								3099
 							]
 						],
 						"settings":
@@ -2056,15 +2236,46 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": -0.0,
-						"translation.y": 810.0,
+						"translation.x": 0.0,
+						"translation.y": 806.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 9,
+					"file": "/C/Users/dhilg_000/AppData/Roaming/Sublime Text 3/Packages/TernJS/TernJS.sublime-settings",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 408,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								408,
+								408
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
 					"file": "favIcon.js",
 					"semi_transient": false,
 					"settings":
@@ -2197,11 +2408,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 11,
 					"file": "/C/Users/dhilg_000/AppData/Roaming/Sublime Text 3/Packages/User/JavascriptBeautify.sublime-settings",
 					"semi_transient": false,
 					"settings":
@@ -2326,22 +2537,24 @@
 							"remote_loading": false,
 							"sublime_auto_complete": true,
 							"synced": false,
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "/C/Users/dhilg_000/AppData/Roaming/Sublime Text 3/Packages/Javascript Beautify/JavascriptBeautify.sublime-settings",
+					"buffer": 12,
+					"file": "manifest.json",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 517,
+						"buffer_size": 631,
 						"regions":
 						{
 						},
@@ -2349,142 +2562,7 @@
 						[
 							[
 								0,
-								517
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"sublime_auto_complete": true,
-							"synced": false,
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "manifest.json",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 550,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								201,
-								201
+								0
 							]
 						],
 						"settings":
@@ -2604,7 +2682,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
