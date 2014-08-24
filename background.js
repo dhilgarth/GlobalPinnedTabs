@@ -16,7 +16,6 @@ var GlobalPinnedTabs = {
 
     registerForChromeEvents: function () {
         chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.onActiveWindowChanged);
-        //chrome.windows.onCreated.addListener(GlobalPinnedTabs.onNewWindowCreated);
         chrome.windows.onRemoved.addListener(GlobalPinnedTabs.onWindowClosed);
         chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdated);
         chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClosed);
