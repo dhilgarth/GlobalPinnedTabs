@@ -49,18 +49,19 @@ GloballyPinnedTab.prototype = {
             this.createTabForWindow(windows[i]);
     },
 
-    createTabForWindow: function(window) {
+    createTabForWindow: function(window, callback) {
         var addDummyTab = this.createDummyTabAdder(window.id);
+        var internalCallback = function(tab) { addDummyTab(tab); if(callback) callback(tab); };
         var url = this.getUrlForDummyTab();
 
         var tab = Chrome.findPinnedTab([url], window);
         if(tab)
-            addDummyTab(tab);
+            internalCallback(tab);
         else {
             tab = Chrome.findPinnedTab([this.startupUrl, this.currentUrl], window);
             if(tab)
                 chrome.tabs.remove(tab.id);
-            Chrome.createPinnedTab(window, url, this.realTab.favIconUrl, addDummyTab);
+            Chrome.createPinnedTab(window, url, this.realTab.favIconUrl, internalCallback);
         }
     },
 
