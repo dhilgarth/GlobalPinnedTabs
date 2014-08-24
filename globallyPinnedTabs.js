@@ -149,6 +149,13 @@ GloballyPinnedTabs.prototype = {
 
         var performMove = function() {
             Chrome.moveTabs(realTabIds, targetWindow.id, smallestRealTabsIndex, function(tabs) {
+                if(dummyTabs.missingTabs.length) {
+                    Chrome.getWindow(sourceWindow.id, function(window) {
+                        for (i = 0; i < dummyTabs.missingTabs.length; i++) {
+                            dummyTabs.missingTabs[i].createTabForWindow(window, callCallback);
+                        }
+                    })
+                }
                 for (var i = 0; i < tabs.length; ++i) {
                     self.tabs[i].realTab = tabs[i];
                     Chrome.pinTab(tabs[i].id, callCallback);
@@ -164,16 +171,10 @@ GloballyPinnedTabs.prototype = {
                     }
                 });
             }
-
-            if(dummyTabs.missingTabs.length) {
-                for (i = 0; i < dummyTabs.missingTabs.length; i++) {
-                    dummyTabs.missingTabs[i].createTabForWindow(sourceWindow, callCallback);
-                }
-            }
         };
 
         var createPinnedTabInTargetWindow = function() {
-            if(targetWindow.tabs.length === self.tabs.length) {
+            if(targetWindow.tabs.length === (self.tabs.length - dummyTabs.missingTabs.length)) {
                 Chrome.createPinnedTab(targetWindow, 'about:blank', function (tab) {
                     temporaryTabIds.push(tab.id);
                     performMove();
