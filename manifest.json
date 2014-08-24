@@ -1,17 +1,25 @@
 {
-  "manifest_version": 2,
+    "manifest_version": 2,
 
-  "name": "Global pinned tabs",
-  "description": "Global pinned tabs",
-  "version": "1.0",
+    "name": "Global pinned tabs",
+    "description": "Global pinned tabs",
+    "version": "1.0",
 
-  "permissions": [
-    "tabs",
-    "storage",
-    "alarms"
-  ],
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  }
+    "permissions": [
+        "tabs",
+        "storage",
+        "http://*/",
+        "https://*/"
+    ],
+    "background": {
+        "scripts": [
+            "chrome.js",
+            "globallyPinnedTab.js",
+            "globallyPinnedTabs.js",
+            "storage.js",
+            "arrayExtensions.js",
+            "background.js"
+        ],
+        "persistent": false
+    }
 }
