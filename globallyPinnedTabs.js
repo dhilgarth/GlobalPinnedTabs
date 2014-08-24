@@ -43,10 +43,6 @@ GloballyPinnedTabs.prototype = {
             this.tabs[i].createTabs(windows);
     },
 
-    createTabsForWindow: function(window) {
-        for (var i = 0; i < this.tabs.length; i++)
-            this.tabs[i].createTabForWindow(window);
-    },
 
     activateWindow: function(window, callback) {
         if(this.tabs.length === 0) {
