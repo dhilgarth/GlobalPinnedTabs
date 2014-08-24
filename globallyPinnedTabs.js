@@ -77,15 +77,18 @@ GloballyPinnedTabs.prototype = {
             this.tabs[i].createRealTab(targetWindow, callback, true);
     },
 
-    getDummyTabsForWindow: function(window, recreateMissing) {
-        var result = [];
+    getDummyTabsForWindow: function(window) {
+        var result = {
+            foundTabs: [],
+            missingTabs: []
+        };
         for (var i = 0; i < this.tabs.length; i++) {
-            tab = this.tabs[i];
+            var tab = this.tabs[i];
             var dummyTab = tab.dummyTabs[window.id];
-            if(!dummyTab && recreateMissing)
-                tab.createTabForWindow(window);
-            dummyTab = tab.dummyTabs[window.id];
-            result.push(dummyTab);
+            if(!dummyTab)
+                result.missingTabs.push(tab);
+            else
+                result.foundTabs.push(dummyTab);
         }
 
         return result;
@@ -98,8 +101,9 @@ GloballyPinnedTabs.prototype = {
         var smallestDummyTabsIndex = 10000;
         var i;
         var tab;
-        for (i = 0; i < dummyTabs.length; i++) {
-            tab = dummyTabs[i];
+        var indexOfActiveTab = -1;
+        for (i = 0; i < dummyTabs.foundTabs.length; i++) {
+            tab = dummyTabs.foundTabs[i];
             dummyTabIds.push(tab.id);
             smallestDummyTabsIndex = Math.min(smallestDummyTabsIndex, tab.index);
         }
@@ -113,7 +117,7 @@ GloballyPinnedTabs.prototype = {
         }
 
         var finished = 0;
-        var total = 0;
+        var total = realTabIds.length + dummyTabs.foundTabs.length + dummyTabs.missingTabs.length;
         var self = this;
 
         var callCallback = function() {
@@ -123,21 +127,29 @@ GloballyPinnedTabs.prototype = {
         };
 
         Chrome.moveTabs(realTabIds, targetWindow.id, smallestRealTabsIndex, function(tabs) {
-            total += tabs.length;
             for (var i = 0; i < tabs.length; ++i) {
                 self.tabs[i].realTab = tabs[i];
                 Chrome.pinTab(tabs[i].id, callCallback);
             }
         });
 
-        Chrome.moveTabs(dummyTabIds, sourceWindowId, smallestDummyTabsIndex, function(tabs) {
-            total += tabs.length;
-            for (var i = 0; i < tabs.length; ++i) {
-                delete self.tabs[i].dummyTabs[targetWindow.id];
-                self.tabs[i].dummyTabs[sourceWindowId] = tabs[i];
-                Chrome.pinTab(tabs[i].id, callCallback);
-            }
-        });
+        if(dummyTabIds.length) {
+            Chrome.moveTabs(dummyTabIds, sourceWindowId, smallestDummyTabsIndex, function (tabs) {
+                for (var i = 0; i < tabs.length; ++i) {
+                    delete self.tabs[i].dummyTabs[targetWindow.id];
+                    self.tabs[i].dummyTabs[sourceWindowId] = tabs[i];
+                    Chrome.pinTab(tabs[i].id, callCallback);
+                }
+            });
+        }
+        
+        if(dummyTabs.missingTabs.length) {
+            Chrome.getWindow(sourceWindowId, function (window) {
+                for (i = 0; i < dummyTabs.missingTabs.length; i++) {
+                    dummyTabs.missingTabs[i].createTabForWindow(window, callCallback);
+                }
+            });
+        }
     },
 
     updateTab: function(tab) {
