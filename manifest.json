@@ -13,6 +13,8 @@
     ],
     "background": {
         "scripts": [
+            "arrayExtensions.js",
+            "stringExtensions.js",
             "numberExtensions.js",
             "utils.js",
             "periodicExecutor.js",
@@ -22,8 +24,6 @@
             "globallyPinnedTab.js",
             "globallyPinnedTabs.js",
             "storage.js",
-            "arrayExtensions.js",
-            "stringExtensions.js",
             "background.js",
             "queryParameters.js"
         ],
