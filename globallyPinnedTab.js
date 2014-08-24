@@ -22,6 +22,11 @@ GloballyPinnedTab.prototype = {
         };
     },
 
+    activate: function(callback) {
+        if(this.realTab)
+            Chrome.activateTab(this.realTab.id, callback);
+    },
+
     createTabs: function(windows) {
         windows = windows.filter(function(x) { return x.type === 'normal'; });
         var activeWindow = windows.filter(function(x) { return x.focused; })[0] || windows[0];

@@ -1,7 +1,7 @@
 var Chrome = {
 
     init: function () {
-        Chrome.tabDraggingExecutor = new PeriodicExecutor(500);
+        Chrome.tabDraggingExecutor = new PeriodicExecutor(200);
         Chrome.tabDraggingDelegate = new MultiDelegate();
     },
 
