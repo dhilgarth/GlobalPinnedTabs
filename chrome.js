@@ -64,7 +64,7 @@ var Chrome = {
         });
     },
 
-    createPinnedTab: function (window, url, favIconUrl, callback) {
+    createPinnedTab: function (window, url, callback) {
         chrome.tabs.create({
             url: url,
             pinned: true,

@@ -45,7 +45,10 @@ GloballyPinnedTab.prototype = {
             callback();
         } else {
             var url = useCurrentUrl ? this.currentUrl : this.startupUrl;
-            Chrome.createPinnedTab(window, url, undefined, function(tab) { self.updateRealTab(tab); callback(); });
+            Chrome.createPinnedTab(window, url, function (tab) {
+                self.updateRealTab(tab);
+                callback();
+            });
         }
     },
 
@@ -66,7 +69,7 @@ GloballyPinnedTab.prototype = {
             tab = Chrome.findPinnedTab([this.startupUrl, this.currentUrl], window);
             if(tab)
                 chrome.tabs.remove(tab.id);
-            Chrome.createPinnedTab(window, url, this.favIconUrl, internalCallback);
+            Chrome.createPinnedTab(window, url, internalCallback);
         }
     },
 
