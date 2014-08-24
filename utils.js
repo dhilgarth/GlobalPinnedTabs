@@ -5,9 +5,13 @@ var Utils = {
                 f.apply(this, arguments);
             }
             catch (e) {
-                console.log(e);
+                console.error(Utils.formatException(e));
                 throw e;
             }
         };
+    },
+
+    formatException: function(e) {
+        return e.stack;
     }
 }
