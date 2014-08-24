@@ -29,7 +29,6 @@ var GlobalPinnedTabs = {
     },
 
     onActiveWindowChanged: function (windowId) {
-        console.log('active window changed');
         if (windowId === chrome.windows.WINDOW_ID_NONE)
             return;
         Chrome.executeWhenUserStoppedDragging(function () {
@@ -48,19 +47,16 @@ var GlobalPinnedTabs = {
     },
 
     onWindowClosed: function (windowId) {
-        console.log('window closed');
         Storage.globallyPinnedTabs.handleClosedWindow(windowId);
     },
 
     onTabActivated: function (activeInfo) {
-        console.log('tab activated');
         chrome.tabs.get(activeInfo.tabId, Chrome.errorLogger(function (tab) {
             Storage.globallyPinnedTabs.updateTab(tab)
         }));
     },
 
     onTabUpdated: function (tabId, changeInfo, tab) {
-        console.log('tab updated');
         if (GlobalPinnedTabs.disableTabUpdateHandling)
             return;
         if (changeInfo.pinned !== undefined) {
@@ -77,7 +73,6 @@ var GlobalPinnedTabs = {
     },
 
     onTabClosed: function (tabId, removeInfo) {
-        console.log('tab closed');
         if (!removeInfo.isWindowClosing)
             Storage.globallyPinnedTabs.handleClosedTab(tabId);
     }
