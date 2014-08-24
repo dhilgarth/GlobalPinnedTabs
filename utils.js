@@ -24,4 +24,4 @@ var Utils = {
     formatException: function(e) {
         return e.stack;
     }
-}
+};
