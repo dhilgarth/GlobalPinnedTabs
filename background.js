@@ -3,7 +3,7 @@ var GlobalPinnedTabs = {
     windowId: undefined,
     tabId: undefined,
     disableTabUpdateHandling: false,
-    instrumentMethods: true,
+    instrumentMethods: false,
 
     instrument: function () {
         Utils.instrument(
