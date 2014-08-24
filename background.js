@@ -19,26 +19,6 @@ var GlobalPinnedTabs = {
         chrome.windows.onRemoved.addListener(GlobalPinnedTabs.onWindowClosed);
         chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdated);
         chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClosed);
-        // chrome.tabs.onAttached.addListener(function(tabId, attachInfo) {
-        //     console.debug('onAttached: ' + tabId);
-        //     console.debug(attachInfo);
-        // });
-        // chrome.tabs.onDetached.addListener(function(tabId, detachInfo) {
-        //     console.debug('onDetached: ' + tabId);
-        //     console.debug(detachInfo);
-        // });
-        // chrome.tabs.onMoved.addListener(function(tabId, moveInfo) {
-        //     console.debug('onMoved: ' + tabId);
-        //     console.debug(moveInfo);
-        // });
-        // chrome.tabs.onHighlighted.addListener(function(highlightInfo) {
-        //     console.debug('onHighlighted:');
-        //     console.debug(highlightInfo);
-        // });
-        // chrome.tabs.onActivated.addListener(function(activeInfo) {
-        //     console.debug('onActivated:');
-        //     console.debug(activeInfo);
-        // });
     },
 
     createTabs: function () {
