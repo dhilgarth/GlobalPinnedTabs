@@ -156,7 +156,7 @@ GloballyPinnedTabs.prototype = {
         } else {
             pinnedTab = this.getTabForAnyTabId(tab.id);
             if(pinnedTab)
-                pinnedTab.updateDummyTab(pinnedTab);
+                pinnedTab.updateDummyTab(tab);
         }
     },
 
@@ -169,7 +169,7 @@ GloballyPinnedTabs.prototype = {
             if (x.realTab && (x.realTab.id === tabId))
                 return true;
             for (var key in x.dummyTabs) {
-                if (x.dummyTabs[key] === tabId) {
+                if (x.dummyTabs[key].id === tabId) {
                     return true;
                 }
             }
