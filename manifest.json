@@ -3,13 +3,11 @@
 
     "name": "Global pinned tabs",
     "description": "Global pinned tabs",
-    "version": "1.0.1",
+    "version": "1.0.2",
 
     "permissions": [
         "tabs",
-        "storage",
-        "http://*/",
-        "https://*/"
+        "storage"
     ],
     "background": {
         "scripts": [

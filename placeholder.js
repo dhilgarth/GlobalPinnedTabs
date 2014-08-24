@@ -13,17 +13,17 @@ document.title = queryParameters.title;
 var update = function () {
     document.getElementById('favicon').src = queryParameters.favIconUrl;
     document.getElementById('title-text').innerText = queryParameters.title;
-    document.getElementById('startupUrl').innerText = queryParameters.startupUrl;
-    document.getElementById('startupUrl').href = queryParameters.startupUrl;
-    document.getElementById('currentUrl').innerText = queryParameters.currentUrl;
-    document.getElementById('currentUrl').href = queryParameters.currentUrl;
+    document.getElementById('startup-url').innerText = queryParameters.startupUrl;
+    document.getElementById('startup-url').href = queryParameters.startupUrl;
+    document.getElementById('current-url').innerText = queryParameters.currentUrl;
+    document.getElementById('current-url').href = queryParameters.currentUrl;
 };
 
 var onReady = function () {
     update();
 };
 
-if (chrome && chrome.runtime && chrome.onMessage) {
+if (chrome && chrome.runtime && chrome.runtime.onMessage) {
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
             if (request.type === 'favIconUrl') {
@@ -43,6 +43,8 @@ if (chrome && chrome.runtime && chrome.onMessage) {
             update();
         });
 }
+else
+    console.warn("Couldn't add listener for messages from extension.");
 
 document.onreadystatechange = function () {
     if (document.readyState === 'complete') {
