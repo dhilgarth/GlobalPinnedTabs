@@ -16,6 +16,7 @@
             "numberExtensions.js",
             "utils.js",
             "periodicExecutor.js",
+            "loggingDecorator.js",
             "multiDelegate.js",
             "chrome.js",
             "globallyPinnedTab.js",

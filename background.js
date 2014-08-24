@@ -6,10 +6,10 @@ var GlobalPinnedTabs = {
     instrumentMethods: true,
 
     instrument: function() {
-        Utils.instrument(Chrome, 'Chrome', { mode: 'exclude', methods: ['errorLogger']});
+        Utils.instrument(Chrome, 'Chrome', { methods: { errorLogger: { mode: 'exclude' }, isUserDragging: { mode: 'exclude' }, executeWhenUserStoppedDragging : { logSubTree: false }, getAllWindows: { mode: 'exclude'}}});
         Utils.instrument(GloballyPinnedTab.prototype, 'GloballyPinnedTab');
         Utils.instrument(GloballyPinnedTabs.prototype, 'GloballyPinnedTabs');
-        Utils.instrument(PeriodicExecutor.prototype, 'PeriodicExecutor');
+        Utils.instrument(PeriodicExecutor.prototype, 'PeriodicExecutor', { methods: { executeStep: { mode: 'exclude' }}});
     },
 
     init: function () {
