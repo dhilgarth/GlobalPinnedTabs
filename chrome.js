@@ -6,7 +6,7 @@ var Chrome = {
     getAllWindows: function (callback) {
         chrome.windows.getAll({
             populate: true
-        }, Utils.errorLogger(callback));
+        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
     },
 
     findPinnedTab: function (urls, window) {
@@ -25,17 +25,17 @@ var Chrome = {
             pinned: true,
             active: false,
             windowId: window.id
-        }, Utils.errorLogger(callback));
+        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
     },
 
     pinTab: function (tabId, callback) {
         chrome.tabs.update(tabId, {
             pinned: true
-        }, Utils.errorLogger(callback));
+        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
     },
     },
 
-    moveTabs: function (tabIds, targetWindowId, index, success, startTime) {
+    moveTabs: function (tabIds, targetWindowId, index, callback, startTime) {
 
         startTime = startTime || Date.now();
 
@@ -57,11 +57,11 @@ var Chrome = {
                 if (lastError !== undefined && lastError.message)
                     console.warn('Reason: ' + lastError.message);
                 setTimeout(function () {
-                    Chrome.moveTabs(tabIds, targetWindowId, index, success, startTime);
+                    Chrome.moveTabs(tabIds, targetWindowId, index, callback, startTime);
                 }, 500);
             }
             else {
-                success(tabs);
+                Utils.handleUndefinedCallback(callback(tabs));
             }
         }));
     }

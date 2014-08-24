@@ -11,6 +11,16 @@ var Utils = {
         };
     },
 
+    handleUndefinedCallback: function(callback) {
+        if(callback) {
+            return function (args) {
+                callback.apply(this, arguments);
+            }
+        }
+        else
+            return function(){};
+    },
+
     formatException: function(e) {
         return e.stack;
     }
