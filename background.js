@@ -3,8 +3,19 @@ var GlobalPinnedTabs = {
     windowId: undefined,
     tabId: undefined,
     disableTabUpdateHandling: false,
+    instrumentMethods: true,
+
+    instrument: function() {
+        Utils.instrument(Chrome, 'Chrome', { mode: 'exclude', methods: ['errorLogger']});
+        Utils.instrument(GloballyPinnedTab.prototype, 'GloballyPinnedTab');
+        Utils.instrument(GloballyPinnedTabs.prototype, 'GloballyPinnedTabs');
+        Utils.instrument(PeriodicExecutor.prototype, 'PeriodicExecutor');
+    },
 
     init: function () {
+        if(GlobalPinnedTabs.instrumentMethods)
+            GlobalPinnedTabs.instrument();
+
         StringExtensions.init();
         ArrayExtensions.init();
         Chrome.init();
