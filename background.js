@@ -32,7 +32,7 @@ var GlobalPinnedTabs = {
         if (windowId === chrome.windows.WINDOW_ID_NONE)
             return;
         Chrome.executeWhenUserStoppedDragging(function () {
-            chrome.windows.getAll(function (windows) {
+            Chrome.getAllWindows(function (windows) {
                 var window = windows.filter(function (x) {
                     return x.type === 'normal' && x.focused;
                 })[0];

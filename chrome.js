@@ -51,7 +51,7 @@ var Chrome = {
     },
 
     isUserDragging: function (callback) {
-        chrome.windows.getAll({ populate: true }, function (windows) {
+        Chrome.getAllWindows(function (windows) {
             var window = windows.filter(function (x) {
                 return x.type === 'normal' && x.focused && x.tabs && x.tabs.length;
             })[0];
