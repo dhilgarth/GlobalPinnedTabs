@@ -40,22 +40,26 @@ var GlobalPinnedTabs = {
         });
     },
 
+    activateFocusedWindow: function(windows) {
+        if(windows === undefined)
+            Chrome.getAllWindows(GlobalPinnedTabs.activateFocusedWindow);
+        else {
+            var window = windows.filter(function (x) {
+                return x.type === 'normal' && x.focused;
+            })[0];
+            if (window) {
+                GlobalPinnedTabs.disableTabUpdateHandling = true;
+                Storage.globallyPinnedTabs.activateWindow(window, function () {
+                    GlobalPinnedTabs.disableTabUpdateHandling = false;
+                });
+            }
+        }
+    },
+
     onActiveWindowChanged: function (windowId) {
         if (windowId === chrome.windows.WINDOW_ID_NONE)
             return;
-        Chrome.executeWhenUserStoppedDragging(function () {
-            Chrome.getAllWindows(function (windows) {
-                var window = windows.filter(function (x) {
-                    return x.type === 'normal' && x.focused;
-                })[0];
-                if (window) {
-                    GlobalPinnedTabs.disableTabUpdateHandling = true;
-                    Storage.globallyPinnedTabs.activateWindow(window, function () {
-                        GlobalPinnedTabs.disableTabUpdateHandling = false;
-                    });
-                }
-            });
-        });
+        Chrome.executeWhenUserStoppedDragging(GlobalPinnedTabs.activateFocusedWindow, true);
     },
 
     onWindowClosed: function (windowId) {

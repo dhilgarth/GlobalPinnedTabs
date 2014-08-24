@@ -36,7 +36,9 @@ var Chrome = {
         })[0];
     },
 
-    executeWhenUserStoppedDragging: function (action) {
+    executeWhenUserStoppedDragging: function (action, replaceExisting) {
+        if(replaceExisting)
+            Chrome.tabDraggingDelegate.remove(action);
         Chrome.tabDraggingDelegate.add(action);
         if (!Chrome.tabDraggingExecutor.isExecuting) {
             Chrome.tabDraggingExecutor.start(function () {
