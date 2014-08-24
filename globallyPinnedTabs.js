@@ -245,7 +245,6 @@ GloballyPinnedTabs.prototype = {
 
     onPinnedTabClosed: function(pinnedTab) {
         this.tabs.remove(pinnedTab);
-        console.log(this.tabs);
         Storage.persistData();
     }
 };
