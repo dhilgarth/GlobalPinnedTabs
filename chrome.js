@@ -1,5 +1,5 @@
 var Chrome = {
-    init: function() {
+    init: function () {
 
     },
 
@@ -21,13 +21,17 @@ var Chrome = {
         }, Chrome.errorLogger(callback));
     },
 
-    findPinnedTab: function(urls, window) {
-        if(!window.tabs)
+    findPinnedTab: function (urls, window) {
+        if (!window.tabs)
             return undefined;
-        return window.tabs.filter(function(x) { return (urls.filter(function(y) { return y === x.url; } ).length > 0) && x.pinned; })[0];
+        return window.tabs.filter(function (x) {
+            return (urls.filter(function (y) {
+                return y === x.url;
+            }).length > 0) && x.pinned;
+        })[0];
     },
 
-    createPinnedTab: function(window, url, favIconUrl, callback) {
+    createPinnedTab: function (window, url, favIconUrl, callback) {
         chrome.tabs.create({
             url: url,
             pinned: true,
@@ -36,17 +40,17 @@ var Chrome = {
         }, Chrome.errorLogger(callback));
     },
 
-    pinTab: function(tabId, callback) {
+    pinTab: function (tabId, callback) {
         chrome.tabs.update(tabId, {
             pinned: true
         }, Chrome.errorLogger(callback));
     },
 
-    moveTabs: function(tabIds, targetWindowId, index, success, startTime) {
+    moveTabs: function (tabIds, targetWindowId, index, success, startTime) {
 
         startTime = startTime || Date.now();
 
-        if(Date.now() - startTime > 20000) {
+        if (Date.now() - startTime > 20000) {
             console.error('Moving of tabs failed for 1 minute. Giving up...');
             return;
         }
