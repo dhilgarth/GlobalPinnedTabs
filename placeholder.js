@@ -43,6 +43,8 @@ if (chrome && chrome.runtime && chrome.runtime.onMessage) {
             update();
         });
 }
+else
+    console.warn("Couldn't add listener for messages from extension.");
 
 document.onreadystatechange = function () {
     if (document.readyState === 'complete') {
