@@ -3,10 +3,22 @@ var Chrome = {
 
     },
 
-    getAllWindows: function(callback) {
+    errorLogger: function (f) {
+        return function (args) {
+            try {
+                f.apply(this, arguments);
+            }
+            catch (e) {
+                console.log(e);
+                throw e;
+            }
+        };
+    },
+
+    getAllWindows: function (callback) {
         chrome.windows.getAll({
             populate: true
-        }, callback);
+        }, Chrome.errorLogger(callback));
     },
 
     findPinnedTab: function(urls, window) {
@@ -21,13 +33,13 @@ var Chrome = {
             pinned: true,
             active: false,
             windowId: window.id
-        }, callback);
+        }, Chrome.errorLogger(callback));
     },
 
     pinTab: function(tabId, callback) {
         chrome.tabs.update(tabId, {
             pinned: true
-        }, callback);
+        }, Chrome.errorLogger(callback));
     },
 
     moveTabs: function(tabIds, targetWindowId, index, success, startTime) {
@@ -42,8 +54,8 @@ var Chrome = {
         chrome.tabs.move(tabIds, {
             windowId: targetWindowId,
             index: index
-        }, function(tabs) {
-            if(!(tabs instanceof Array))
+        }, Chrome.errorLogger(function (tabs) {
+            if (!(tabs instanceof Array))
                 tabs = [ tabs ];
 
             var lastError = chrome.runtime.lastError;
@@ -51,11 +63,13 @@ var Chrome = {
                 console.warn("Couldn't move tabs.");
                 if (lastError !== undefined && lastError.message)
                     console.warn('Reason: ' + lastError.message);
-                setTimeout(function() { Chrome.moveTabs(tabIds, targetWindowId, index, success, startTime); }, 500);
+                setTimeout(function () {
+                    Chrome.moveTabs(tabIds, targetWindowId, index, success, startTime);
+                }, 500);
             }
             else {
                 success(tabs);
             }
-        });
+        }));
     }
 };
