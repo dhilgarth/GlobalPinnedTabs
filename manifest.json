@@ -7,9 +7,7 @@
 
     "permissions": [
         "tabs",
-        "storage",
-        "http://*/",
-        "https://*/"
+        "storage"
     ],
     "background": {
         "scripts": [
