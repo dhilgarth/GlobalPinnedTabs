@@ -16,7 +16,7 @@ var GlobalPinnedTabs = {
 
     registerForChromeEvents: function () {
         chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.onActiveWindowChanged);
-        chrome.windows.onCreated.addListener(GlobalPinnedTabs.onNewWindowCreated);
+        //chrome.windows.onCreated.addListener(GlobalPinnedTabs.onNewWindowCreated);
         chrome.windows.onRemoved.addListener(GlobalPinnedTabs.onWindowClosed);
         chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdated);
         chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClosed);
@@ -46,12 +46,6 @@ var GlobalPinnedTabs = {
         Chrome.getAllWindows(function (windows) {
             Storage.globallyPinnedTabs.createTabs(windows);
         });
-    },
-
-    onNewWindowCreated: function (window) {
-        console.log('new window');
-        if (window.type === 'normal')
-            Storage.globallyPinnedTabs.createTabsForWindow(window);
     },
 
     onActiveWindowChanged: function (windowId) {
