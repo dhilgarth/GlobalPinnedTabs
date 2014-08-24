@@ -15,10 +15,11 @@ var GlobalPinnedTabs = {
     },
 
     registerForChromeEvents: function() {
-        chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.activeWindowChanged);
-        chrome.windows.onCreated.addListener(GlobalPinnedTabs.newWindowCreated);
+        chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.onActiveWindowChanged);
+        chrome.windows.onCreated.addListener(GlobalPinnedTabs.onNewWindowCreated);
         chrome.windows.onRemoved.addListener(GlobalPinnedTabs.onWindowClosed);
-        chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdate);
+        chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdated);
+        chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClosed);
         // chrome.tabs.onAttached.addListener(function(tabId, attachInfo) {
         //     console.debug('onAttached: ' + tabId);
         //     console.debug(attachInfo);
@@ -39,19 +40,19 @@ var GlobalPinnedTabs = {
         //     console.debug('onActivated:');
         //     console.debug(activeInfo);
         // });
-
-        chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClose);
     },
 
     createTabs: function() {
         Chrome.getAllWindows(function(windows) { Storage.globallyPinnedTabs.createTabs(windows); });
     },
 
-    newWindowCreated: function(window) {
+    onNewWindowCreated: function(window) {
+        console.log('new window');
         Storage.globallyPinnedTabs.createTabsForWindow(window);
     },
 
-    activeWindowChanged: function(windowId) {
+    onActiveWindowChanged: function(windowId) {
+        console.log('active window changed');
         if (windowId === chrome.windows.WINDOW_ID_NONE)
             return;
         chrome.windows.get(parseInt(windowId), {
@@ -71,7 +72,12 @@ var GlobalPinnedTabs = {
         });
     },
 
-    onTabUpdate: function(tabId, changeInfo, tab) {
+    onWindowClosed: function(windowId) {
+        console.log('window closed');
+        Storage.globallyPinnedTabs.handleClosedWindow(windowId);
+    },
+
+    onTabUpdated: function(tabId, changeInfo, tab) {
         if (GlobalPinnedTabs.disableTabUpdateHandling)
             return;
         if (changeInfo.pinned !== undefined) {
@@ -87,13 +93,9 @@ var GlobalPinnedTabs = {
         }
     },
 
-    onTabClose: function(tabId, removeInfo) {
+    onTabClosed: function(tabId, removeInfo) {
         if(!removeInfo.isWindowClosing)
             Storage.globallyPinnedTabs.handleClosedTab(tabId);
-    },
-
-    onWindowClosed: function(windowId) {
-        Storage.globallyPinnedTabs.handleClosedWindow(windowId);
     }
 };
 
