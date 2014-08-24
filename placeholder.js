@@ -23,7 +23,7 @@ var onReady = function () {
     update();
 };
 
-if (chrome && chrome.runtime && chrome.onMessage) {
+if (chrome && chrome.runtime && chrome.runtime.onMessage) {
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
             if (request.type === 'favIconUrl') {
