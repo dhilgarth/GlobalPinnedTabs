@@ -6,11 +6,12 @@ var Chrome = {
     },
 
     errorLogger: function (f) {
+        var stack = Error().stack;
         return function (args) {
             if(chrome.runtime.lastError === undefined)
                 Utils.errorLogger(Utils.handleUndefinedCallback(f)).apply(this, arguments);
             else
-                console.error(chrome.runtime.lastError.message);
+                console.error(chrome.runtime.lastError.message + '\n' + stack);
         };
     },
     getAllWindows: function (callback) {
