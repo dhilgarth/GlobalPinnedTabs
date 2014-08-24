@@ -13,10 +13,10 @@ document.title = queryParameters.title;
 var update = function () {
     document.getElementById('favicon').src = queryParameters.favIconUrl;
     document.getElementById('title-text').innerText = queryParameters.title;
-    document.getElementById('startupUrl').innerText = queryParameters.startupUrl;
-    document.getElementById('startupUrl').href = queryParameters.startupUrl;
-    document.getElementById('currentUrl').innerText = queryParameters.currentUrl;
-    document.getElementById('currentUrl').href = queryParameters.currentUrl;
+    document.getElementById('startup-url').innerText = queryParameters.startupUrl;
+    document.getElementById('startup-url').href = queryParameters.startupUrl;
+    document.getElementById('current-url').innerText = queryParameters.currentUrl;
+    document.getElementById('current-url').href = queryParameters.currentUrl;
 };
 
 var onReady = function () {
