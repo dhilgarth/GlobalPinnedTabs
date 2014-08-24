@@ -5,7 +5,7 @@ if (!link) {
     document.head.appendChild(link);
 }
 
-var queryParameters = SearchString.getQueryParameters(document.location.search);
+var queryParameters = QueryParameters.getQueryParameters(document.location.search);
 
 link.href = queryParameters.favIconUrl;
 document.title = queryParameters.title;

@@ -22,7 +22,7 @@
             "storage.js",
             "arrayExtensions.js",
             "background.js",
-            "searchString.js"
+            "queryParameters.js"
         ],
         "persistent": false
     }
