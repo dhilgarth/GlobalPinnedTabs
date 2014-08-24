@@ -52,30 +52,19 @@ var GlobalPinnedTabs = {
         console.log('active window changed');
         if (windowId === chrome.windows.WINDOW_ID_NONE)
             return;
-        chrome.windows.get(parseInt(windowId), {
-            populate: true
-        }, Utils.errorLogger(function (window) {
-            if (window.type === 'normal') {
-                Chrome.isUserDragging(function (userIsDragging) {
-                    console.log('User is dragging: ' + userIsDragging);
-                    if (!userIsDragging) {
-                        GlobalPinnedTabs.disableTabUpdateHandling = true;
-                        Storage.globallyPinnedTabs.activateWindow(window, function () {
-                            GlobalPinnedTabs.disableTabUpdateHandling = false;
-                        });
-                    } else {
-                        Chrome.executeWhenUserStoppedDragging(function() {
-                            chrome.windows.getLastFocused(function(window) {
-                                GlobalPinnedTabs.disableTabUpdateHandling = true;
-                                Storage.globallyPinnedTabs.activateWindow(window, function () {
-                                    GlobalPinnedTabs.disableTabUpdateHandling = false;
-                                });
-                            });
-                        });
-                    }
-                });
-            }
-        }));
+        Chrome.executeWhenUserStoppedDragging(function () {
+            chrome.windows.getAll(function (windows) {
+                var window = windows.filter(function (x) {
+                    return x.type === 'normal' && x.focused;
+                })[0];
+                if (window) {
+                    GlobalPinnedTabs.disableTabUpdateHandling = true;
+                    Storage.globallyPinnedTabs.activateWindow(window, function () {
+                        GlobalPinnedTabs.disableTabUpdateHandling = false;
+                    });
+                }
+            });
+        });
     },
 
     onWindowClosed: function (windowId) {
