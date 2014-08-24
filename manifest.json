@@ -21,6 +21,7 @@
             "globallyPinnedTabs.js",
             "storage.js",
             "arrayExtensions.js",
+            "stringExtensions.js",
             "background.js",
             "queryParameters.js"
         ],

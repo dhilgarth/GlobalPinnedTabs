@@ -5,6 +5,7 @@ var GlobalPinnedTabs = {
     disableTabUpdateHandling: false,
 
     init: function () {
+        StringExtensions.init();
         ArrayExtensions.init();
         Chrome.init();
         Storage.loadData(function () {
