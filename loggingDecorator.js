@@ -5,9 +5,9 @@ var LoggingDecorator = {
     getFormattedTime: function () {
         return Utils.printTime(new Date()) + ':';
     },
-    create: function(name, f, logSubTree, logOwnCall) {
-        return function(args) {
-            if(!LoggingDecorator.disableLoggingForCurrentTree && logOwnCall) {
+    create: function (name, f, logSubTree, logOwnCall) {
+        return function (args) {
+            if (!LoggingDecorator.disableLoggingForCurrentTree && logOwnCall) {
                 var indent = ' '.repeat(LoggingDecorator.currentLoggingCallDepth * 4);
                 var message = [LoggingDecorator.getFormattedTime()];
                 if (arguments.length) {
@@ -15,8 +15,9 @@ var LoggingDecorator = {
                     message.push(indent + 'Calling \'' + name + '\' with arguments:')
                     message.push(indent + '    ' + inputValues);
                 }
-                else
+                else {
                     message.push(indent + 'Calling \'' + name + '\' without arguments');
+                }
                 message.push(indent + '  Instance:');
                 message.push(indent + '    ' + Utils.printObject(this, '    ' + indent));
 
@@ -25,22 +26,30 @@ var LoggingDecorator = {
 
             try {
                 LoggingDecorator.currentLoggingCallDepth++;
-                if(!logSubTree)
+                if (!logSubTree) {
                     LoggingDecorator.disableLoggingForCurrentTree = true;
+                }
                 var result = f.apply(this, arguments);
-                if(logOwnCall && !LoggingDecorator.disableLoggingForCurrentTree)
-                    console.debug(LoggingDecorator.getFormattedTime() + '\n' + indent + '\'' + name + '\' returned with ' + Utils.printObject(result, '    ' + indent));
+                if (logOwnCall && !LoggingDecorator.disableLoggingForCurrentTree) {
+                    console.debug(
+                            LoggingDecorator.getFormattedTime() + '\n' + indent + '\'' + name + '\' returned with ' +
+                            Utils.printObject(result, '    ' + indent));
+                }
                 return result;
             }
-            catch(e) {
-                if(logOwnCall && !LoggingDecorator.disableLoggingForCurrentTree)
-                    console.debug(LoggingDecorator.getFormattedTime() + '\n' + indent + '\'' + name + '\' threw an exception: ' + Utils.formatException(e));
+            catch (e) {
+                if (logOwnCall && !LoggingDecorator.disableLoggingForCurrentTree) {
+                    console.debug(
+                            LoggingDecorator.getFormattedTime() + '\n' + indent + '\'' + name +
+                            '\' threw an exception: ' + Utils.formatException(e));
+                }
                 throw e;
             }
             finally {
                 LoggingDecorator.currentLoggingCallDepth--;
-                if(!logSubTree)
+                if (!logSubTree) {
                     LoggingDecorator.disableLoggingForCurrentTree = false;
+                }
             }
         }
     }

@@ -13,11 +13,11 @@ MultiDelegate.prototype = {
 
     execute: function (context, args) {
         for (var i = 0; i < this.delegates.length; ++i) {
-            this.delegates[i].apply(context,  Array.prototype.slice.call(arguments, 1));
+            this.delegates[i].apply(context, Array.prototype.slice.call(arguments, 1));
         }
     },
 
-    clear: function() {
+    clear: function () {
         this.delegates = [];
     }
 }

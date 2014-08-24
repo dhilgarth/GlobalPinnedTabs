@@ -11,7 +11,7 @@ link.href = queryParameters.favIconUrl;
 document.title = queryParameters.title;
 
 var div = document.createElement('div');
-var setDivText = function() {
+var setDivText = function () {
     div.innerHTML = 'Startup URL: ' + queryParameters.startupUrl + '<br/>';
     div.innerHTML += 'Current URL: ' + queryParameters.currentUrl + '<br/>';
     div.innerHTML += 'Fav icon URL: ' + queryParameters.favIconUrl + '<br/>';
@@ -20,29 +20,31 @@ var setDivText = function() {
 
 setDivText();
 
-
-var onReady = function() {
+var onReady = function () {
     document.body.appendChild(div);
 };
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if(request.type === 'favIconUrl') {
-        queryParameters.favIconUrl = request.data;
-        link.href = request.data;
-    }
-    else if(request.type === 'currentUrl')
-        queryParameters.currentUrl = request.data;
-    else if(request.type === 'title') {
-        queryParameters.title = request.data;
-        document.title = request.data;
-    }
-    else
-        return;
-    setDivText();
-  });
+    function (request, sender, sendResponse) {
+        if (request.type === 'favIconUrl') {
+            queryParameters.favIconUrl = request.data;
+            link.href = request.data;
+        }
+        else if (request.type === 'currentUrl') {
+            queryParameters.currentUrl = request.data;
+        }
+        else if (request.type === 'title') {
+            queryParameters.title = request.data;
+            document.title = request.data;
+        }
+        else {
+            return;
+        }
+        setDivText();
+    });
 
-document.onreadystatechange = function() {
-    if(document.readyState === 'complete')
+document.onreadystatechange = function () {
+    if (document.readyState === 'complete') {
         onReady();
+    }
 };
