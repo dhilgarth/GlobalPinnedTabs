@@ -12,5 +12,9 @@ var QueryParameters = {
         }
 
         return params;
+    },
+
+    getQueryString: function (url) {
+        return url.substring(url.indexOf('?') + 1);
     }
 };
