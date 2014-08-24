@@ -74,10 +74,19 @@ GloballyPinnedTabs.prototype = {
 
     recreateTabs: function(targetWindow, callback) {
         var dummyTabs = this.getDummyTabsForWindow(targetWindow, false);
-        var dummyTabIds = dummyTabs.map(function(x) { return x.id; });
+        var dummyTabIds = dummyTabs.foundTabs.map(function(x) { return x.id; });
         Chrome.removeTabs(dummyTabIds);
+        for(var i =0;i<dummyTabIds.length;i++)
+            delete this.tabs[i].dummyTabs[targetWindow.id];
+        var total = this.tabs.length;
+        var current = 0;
+        var callCallback = function() {
+            current++;
+            if(total === current)
+                callback();
+        };
         for (var i = 0; i < this.tabs.length; i++)
-            this.tabs[i].createRealTab(targetWindow, callback, true); // Bug (callback)
+            this.tabs[i].createRealTab(targetWindow, callCallback, true);
     },
 
     getDummyTabsForWindow: function(window) {
