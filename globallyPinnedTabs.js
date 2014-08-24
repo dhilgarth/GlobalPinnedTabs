@@ -155,8 +155,8 @@ GloballyPinnedTabs.prototype = {
     updateTab: function(tab) {
         var pinnedTab = this.getTabForIdOfRealTab(tab.id);
         if(pinnedTab) {
-            pinnedTab.updateRealTab(tab);
-            Storage.persistData();
+            if(pinnedTab.updateRealTab(tab))
+                Storage.persistData();
         } else {
             pinnedTab = this.getTabForAnyTabId(tab.id);
             if(pinnedTab)

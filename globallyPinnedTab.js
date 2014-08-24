@@ -77,19 +77,25 @@ GloballyPinnedTab.prototype = {
     },
 
     updateRealTab: function(realTab) {
+        var result = false;
         this.realTab = realTab;
         if(realTab.favIconUrl && (realTab.favIconUrl != this.favIconUrl)) {
             this.favIconUrl = realTab.favIconUrl;
             this.sendMessageToDummyWindows('favIconUrl', this.favIconUrl);
+            result = true;
         }
         if(realTab.url && (realTab.url != this.currentUrl)) {
             this.currentUrl = realTab.url;
             this.sendMessageToDummyWindows('currentUrl', this.currentUrl);
+            result = true;
         }
         if(realTab.title && (realTab.title != this.title)) {
             this.title = realTab.title;
             this.sendMessageToDummyWindows('title', this.title);
+            result = true;
         }
+
+        return result;
     },
 
     updateDummyTab: function(dummyTab) {
