@@ -13,6 +13,7 @@
     ],
     "background": {
         "scripts": [
+            "utils.js",
             "chrome.js",
             "globallyPinnedTab.js",
             "globallyPinnedTabs.js",

@@ -3,22 +3,10 @@ var Chrome = {
 
     },
 
-    errorLogger: function (f) {
-        return function (args) {
-            try {
-                f.apply(this, arguments);
-            }
-            catch (e) {
-                console.log(e);
-                throw e;
-            }
-        };
-    },
-
     getAllWindows: function (callback) {
         chrome.windows.getAll({
             populate: true
-        }, Chrome.errorLogger(callback));
+        }, Utils.errorLogger(callback));
     },
 
     findPinnedTab: function (urls, window) {
@@ -37,13 +25,14 @@ var Chrome = {
             pinned: true,
             active: false,
             windowId: window.id
-        }, Chrome.errorLogger(callback));
+        }, Utils.errorLogger(callback));
     },
 
     pinTab: function (tabId, callback) {
         chrome.tabs.update(tabId, {
             pinned: true
-        }, Chrome.errorLogger(callback));
+        }, Utils.errorLogger(callback));
+    },
     },
 
     moveTabs: function (tabIds, targetWindowId, index, success, startTime) {
@@ -58,7 +47,7 @@ var Chrome = {
         chrome.tabs.move(tabIds, {
             windowId: targetWindowId,
             index: index
-        }, Chrome.errorLogger(function (tabs) {
+        }, Utils.errorLogger(function (tabs) {
             if (!(tabs instanceof Array))
                 tabs = [ tabs ];
 
