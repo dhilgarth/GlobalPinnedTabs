@@ -31,6 +31,7 @@ var GlobalPinnedTabs = {
         chrome.windows.onRemoved.addListener(GlobalPinnedTabs.onWindowClosed);
         chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdated);
         chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClosed);
+        chrome.tabs.onMoved.addListener(GlobalPinnedTabs.onTabMoved);
         chrome.tabs.onActivated.addListener(GlobalPinnedTabs.onTabActivated);
     },
 
@@ -68,6 +69,12 @@ var GlobalPinnedTabs = {
 
     onTabActivated: function (activeInfo) {
         chrome.tabs.get(activeInfo.tabId, Chrome.errorLogger(function (tab) {
+            Storage.globallyPinnedTabs.updateTab(tab)
+        }));
+    },
+
+    onTabMoved: function (tabId, moveInfo) {
+        chrome.tabs.get(tabId, Chrome.errorLogger(function (tab) {
             Storage.globallyPinnedTabs.updateTab(tab)
         }));
     },
