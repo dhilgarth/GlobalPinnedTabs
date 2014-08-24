@@ -16,6 +16,7 @@ var GlobalPinnedTabs = {
         if(GlobalPinnedTabs.instrumentMethods)
             GlobalPinnedTabs.instrument();
 
+        NumberExtensions.init();
         StringExtensions.init();
         ArrayExtensions.init();
         Chrome.init();

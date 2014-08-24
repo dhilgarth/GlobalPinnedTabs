@@ -13,6 +13,7 @@
     ],
     "background": {
         "scripts": [
+            "numberExtensions.js",
             "utils.js",
             "periodicExecutor.js",
             "multiDelegate.js",
