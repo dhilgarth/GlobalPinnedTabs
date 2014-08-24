@@ -3,16 +3,24 @@ var Chrome = {
 
     },
 
+    errorLogger: function (f) {
+        return function (args) {
+            if(chrome.runtime.lastError === undefined)
+                Utils.errorLogger(Utils.handleUndefinedCallback(f)).apply(this, arguments);
+            else
+                console.error(chrome.runtime.lastError.message);
+        };
+    },
     getAllWindows: function (callback) {
         chrome.windows.getAll({
             populate: true
-        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
+        }, Chrome.errorLogger(callback));
     },
 
     getWindow: function (windowId, callback) {
         chrome.windows.get(windowId, {
             populate: true
-        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
+        }, Chrome.errorLogger(callback));
     },
 
     findPinnedTab: function (urls, window) {
@@ -31,19 +39,19 @@ var Chrome = {
             pinned: true,
             active: false,
             windowId: window.id
-        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
+        }, Chrome.errorLogger(callback));
     },
 
     pinTab: function (tabId, callback) {
         chrome.tabs.update(tabId, {
             pinned: true
-        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
+        }, Chrome.errorLogger(callback));
     },
 
     activateTab: function (tabId, callback) {
         chrome.tabs.update(tabId, {
             active: true
-        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
+        }, Chrome.errorLogger(callback));
     },
 
     moveTabs: function (tabIds, targetWindowId, index, callback, startTime) {
@@ -58,7 +66,7 @@ var Chrome = {
         chrome.tabs.move(tabIds, {
             windowId: targetWindowId,
             index: index
-        }, Utils.errorLogger(function (tabs) {
+        }, Chrome.errorLogger(function (tabs) {
             if (!(tabs instanceof Array))
                 tabs = [ tabs ];
 
