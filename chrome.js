@@ -56,8 +56,10 @@ var Chrome = {
             var window = windows.filter(function (x) {
                 return x.type === 'normal' && x.focused && x.tabs && x.tabs.length;
             })[0];
-            if (window === undefined)
+            if (window === undefined) {
+                callback(false);
                 return;
+            }
             var tab = window.tabs[0];
             chrome.tabs.move(tab.id, { index: tab.index }, function () {
                 callback(chrome.runtime.lastError !== undefined && chrome.runtime.lastError.message.indexOf('dragging') !== -1);
