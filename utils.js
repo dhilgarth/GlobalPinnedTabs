@@ -22,6 +22,9 @@ var Utils = {
     },
 
     formatException: function(e) {
-        return e.stack;
+        if(e.stack)
+            return e.stack;
+        return e;
+    },
     }
 };
