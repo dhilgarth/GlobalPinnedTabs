@@ -246,6 +246,16 @@ GloballyPinnedTabs.prototype = {
             if (pinnedTab) {
                 pinnedTab.updateDummyTab(tab);
             }
+            else if (tab.active) {
+                for (var i = 0; i < this.tabs.length; ++i) {
+                    if (this.tabs[i].realTab) {
+                        this.tabs[i].realTab.active = false;
+                    }
+                    for (var key in this.tabs[i].dummyTabs) {
+                        this.tabs[i].dummyTabs[key].active = false;
+                    }
+                }
+            }
         }
     },
 
