@@ -1,156 +1,124 @@
-var ArrayExtensions = {
-    init: function() {
-        if (!Array.prototype.remove) {
-            Array.prototype.remove = function(value) {
-                var index = this.indexOf(value);
-                if (index === -1)
-                    return false;
-
-                this.splice(index, 1);
-                return true;
-            };
-        }
-
-        if (!Array.prototype.addDistinct) {
-            Array.prototype.addDistinct = function(value) {
-                var index = this.indexOf(value);
-                if (index !== -1)
-                    return false;
-                this.push(value);
-                return true;
-            };
-        }
-    }
-};
-
-var Filters = {
-    pinnedTabs: function(x) {
-        return !!x.pinned;
-    },
-    tabsWithUrl: function(url) {
-        return function(x) {
-            return x.url == url;
-        };
-    }
-};
-
 var GlobalPinnedTabs = {
 
-    globalPinnedTabUrls: [],
+    windowId: undefined,
+    tabId: undefined,
+    disableTabUpdateHandling: false,
+    instrumentMethods: false,
 
-    knownPinnedTabIds: {},
+    instrument: function () {
+        Utils.instrument(
+            Chrome, 'Chrome',
+            { methods: { errorLogger: { mode: 'exclude' }, isUserDragging: { mode: 'exclude' }, executeWhenUserStoppedDragging: { logSubTree: false }, getAllWindows: { mode: 'exclude'}}});
+        Utils.instrument(GloballyPinnedTab.prototype, 'GloballyPinnedTab');
+        Utils.instrument(GloballyPinnedTabs.prototype, 'GloballyPinnedTabs');
+        Utils.instrument(
+            PeriodicExecutor.prototype, 'PeriodicExecutor', { methods: { executeStep: { mode: 'exclude' }}});
+        Utils.instrument(Storage);
+    },
 
-    init: function() {
+    init: function () {
+        if (GlobalPinnedTabs.instrumentMethods) {
+            GlobalPinnedTabs.instrument();
+        }
 
+        NumberExtensions.init();
+        StringExtensions.init();
         ArrayExtensions.init();
-        GlobalPinnedTabs.loadData();
+        Chrome.init();
+        Storage.loadData(
+            function () {
+                GlobalPinnedTabs.createTabs();
+            });
 
-        chrome.windows.onCreated.addListener(GlobalPinnedTabs.updateWindow);
-        chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdate);
-        chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClose);
-
-        GlobalPinnedTabs.updateWindows();
+        GlobalPinnedTabs.registerForChromeEvents();
     },
 
-    createTabCallback: function(tab) {
-        GlobalPinnedTabs.knownPinnedTabIds[tab.id] = tab.url;
+    registerForChromeEvents: function () {
+        chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.onActiveWindowChanged);
+        chrome.windows.onRemoved.addListener(GlobalPinnedTabs.onWindowClosed);
+        chrome.tabs.onUpdated.addListener(GlobalPinnedTabs.onTabUpdated);
+        chrome.tabs.onRemoved.addListener(GlobalPinnedTabs.onTabClosed);
+        chrome.tabs.onMoved.addListener(GlobalPinnedTabs.onTabMoved);
+        chrome.tabs.onActivated.addListener(GlobalPinnedTabs.onTabActivated);
     },
 
-    onTabUpdate: function(tabId, changeInfo, tab) {
-        if (changeInfo.pinned !== undefined) {
-            if (changeInfo.pinned === true) {
-                if (confirm('Make this a globally pinned tab that is visible in all windows?')) {
-                    GlobalPinnedTabs.knownPinnedTabIds[tabId] = tab.url;
-                    GlobalPinnedTabs.globalPinnedTabUrls.addDistinct(tab.url);
-                    GlobalPinnedTabs.updateWindows();
-                }
-            } else {
-                GlobalPinnedTabs.handleRemovedTab(tabId);
+    createTabs: function () {
+        Chrome.getAllWindows(
+            function (windows) {
+                Storage.globallyPinnedTabs.createTabs(windows);
+            });
+    },
+
+    activateFocusedWindow: function (windows) {
+        if (windows === undefined) {
+            Chrome.getAllWindows(GlobalPinnedTabs.activateFocusedWindow);
+        }
+        else {
+            var window = windows.filter(
+                function (x) {
+                    return x.type === 'normal' && x.focused;
+                })[0];
+            if (window) {
+                GlobalPinnedTabs.disableTabUpdateHandling = true;
+                Storage.globallyPinnedTabs.activateWindow(
+                    window, function () {
+                        GlobalPinnedTabs.disableTabUpdateHandling = false;
+                    });
             }
         }
     },
 
-    disableTabCloseHandling: false,
-
-    onTabClose: function(tabId, removeInfo) {
-        if (!removeInfo.isWindowClosing && !GlobalPinnedTabs.disableTabCloseHandling)
-            GlobalPinnedTabs.handleRemovedTab(tabId);
-    },
-
-    handleRemovedTab: function(tabId) {
-        var url = GlobalPinnedTabs.knownPinnedTabIds[tabId];
-        if (url) {
-            delete GlobalPinnedTabs.knownPinnedTabIds[tabId];
-            GlobalPinnedTabs.globalPinnedTabUrls.remove(url);
-            GlobalPinnedTabs.removeTabFromAllWindows(url);
-        }
-    },
-
-    getTabsForInitialUrl: function(url) {
-        var result = [];
-        for (var key in GlobalPinnedTabs.knownPinnedTabIds) {
-            if (GlobalPinnedTabs.knownPinnedTabIds[key] === url)
-                result.push(key);
-        }
-
-        return result;
-    },
-
-    removeTabFromAllWindows: function(url) {
-        var tabsWithUrl = GlobalPinnedTabs.getTabsForInitialUrl(url);
-        GlobalPinnedTabs.disableTabCloseHandling = true;
-        for (var i = 0; i < tabsWithUrl.length; ++i) {
-            var tabId = tabsWithUrl[i];
-            chrome.tabs.remove(parseInt(tabId));
-            delete GlobalPinnedTabs.knownPinnedTabIds[tabId];
-        }
-        GlobalPinnedTabs.disableTabCloseHandling = false;
-        GlobalPinnedTabs.persistData();
-    },
-
-    updateWindows: function() {
-        GlobalPinnedTabs.persistData();
-
-        chrome.windows.getAll({
-                populate: true
-            },
-            function(windows) {
-                for (var i = 0; i < windows.length; ++i)
-                    GlobalPinnedTabs.updateWindow(windows[i]);
-            });
-    },
-
-    updateWindow: function(window) {
-        if (window.type === 'popup')
+    onActiveWindowChanged: function (windowId) {
+        if (windowId === chrome.windows.WINDOW_ID_NONE) {
             return;
+        }
+        Chrome.executeWhenUserStoppedDragging(GlobalPinnedTabs.activateFocusedWindow, true);
+    },
 
-        var pinnedTabs = window.tabs ? window.tabs.filter(Filters.pinnedTabs) : [];
-        for (var i = 0; i < GlobalPinnedTabs.globalPinnedTabUrls.length; i++) {
-            var url = GlobalPinnedTabs.globalPinnedTabUrls[i];
-            var pinnedTabsWithUrl = pinnedTabs.filter(Filters.tabsWithUrl(url));
-            if (pinnedTabsWithUrl.length === 0) {
-                chrome.tabs.create({
-                    'url': url,
-                    'pinned': true,
-                    'active': false,
-                    'windowId': window.id
-                }, GlobalPinnedTabs.createTabCallback);
-            } else
-                GlobalPinnedTabs.knownPinnedTabIds[pinnedTabsWithUrl[0].id] = pinnedTabsWithUrl[0].url;
+    onWindowClosed: function (windowId) {
+        Storage.globallyPinnedTabs.handleClosedWindow(windowId);
+    },
+
+    onTabActivated: function (activeInfo) {
+        chrome.tabs.get(
+            activeInfo.tabId, Chrome.errorLogger(
+                function (tab) {
+                    Storage.globallyPinnedTabs.updateTab(tab)
+                }));
+    },
+
+    onTabMoved: function (tabId, moveInfo) {
+        chrome.tabs.get(
+            tabId, Chrome.errorLogger(
+                function (tab) {
+                    Storage.globallyPinnedTabs.updateTab(tab)
+                }));
+    },
+
+    onTabUpdated: function (tabId, changeInfo, tab) {
+        if (GlobalPinnedTabs.disableTabUpdateHandling) {
+            return;
+        }
+        if (changeInfo.pinned !== undefined) {
+            if (changeInfo.pinned === true) {
+                var isUnknownTab = !Storage.globallyPinnedTabs.getTabForAnyTabId(tabId);
+                if (isUnknownTab && confirm('Make this a globally pinned tab that is visible in all windows?')) {
+                    Storage.globallyPinnedTabs.addTab(tab);
+                }
+            }
+            else {
+                Storage.globallyPinnedTabs.handleClosedTab(tabId);
+            }
+        }
+        else if (changeInfo.status === 'complete' || changeInfo.favIconUrl) {
+            Storage.globallyPinnedTabs.updateTab(tab);
         }
     },
 
-    loadData: function() {
-        chrome.storage.sync.get('globalPinnedTabUrls', function(items) {
-            GlobalPinnedTabs.globalPinnedTabUrls = items.globalPinnedTabUrls;
-            console.log(GlobalPinnedTabs.globalPinnedTabUrls);
-        });
-    },
-
-    persistData: function() {
-        chrome.storage.sync.set({
-            globalPinnedTabUrls: GlobalPinnedTabs.globalPinnedTabUrls
-        });
+    onTabClosed: function (tabId, removeInfo) {
+        if (!removeInfo.isWindowClosing) {
+            Storage.globallyPinnedTabs.handleClosedTab(tabId);
+        }
     }
 };
 
