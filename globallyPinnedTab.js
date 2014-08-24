@@ -1,6 +1,8 @@
-function GloballyPinnedTab(startupUrl, currentUrl, onCloseCallback) {
+function GloballyPinnedTab(startupUrl, currentUrl, favIconUrl, title, onCloseCallback) {
     this.startupUrl = startupUrl;
     this.currentUrl = currentUrl || startupUrl;
+    this.favIconUrl = favIconUrl || 'favicon.png';
+    this.title = title || this.startupUrl;
     this.realTab = undefined;
     this.onCloseCallback = onCloseCallback;
     this.dummyTabs = {};
@@ -14,7 +16,9 @@ GloballyPinnedTab.prototype = {
     serialize: function() {
         return {
             startupUrl: this.startupUrl,
-            currentUrl: this.currentUrl
+            currentUrl: this.currentUrl,
+            favIconUrl: this.favIconUrl,
+            title: this.title
         };
     },
 
@@ -32,12 +36,11 @@ GloballyPinnedTab.prototype = {
         var tab = Chrome.findPinnedTab([this.startupUrl, this.currentUrl], window);
         var self = this;
         if(tab) {
-            this.realTab = tab;
+            this.updateRealTab(tab);
             callback();
         } else {
             var url = useCurrentUrl ? this.currentUrl : this.startupUrl;
-            debugger;
-            Chrome.createPinnedTab(window, url, undefined, function(tab) { self.realTab = tab; callback(); });
+            Chrome.createPinnedTab(window, url, undefined, function(tab) { self.updateRealTab(tab); callback(); });
         }
     },
 
@@ -48,8 +51,7 @@ GloballyPinnedTab.prototype = {
 
     createTabForWindow: function(window) {
         var addDummyTab = this.createDummyTabAdder(window.id);
-        var favIconUrl = this.realTab.favIconUrl || 'favicon.png';
-        var url = this.getUrlForDummyTab(favIconUrl);
+        var url = this.getUrlForDummyTab();
 
         var tab = Chrome.findPinnedTab([url], window);
         if(tab)
@@ -67,18 +69,25 @@ GloballyPinnedTab.prototype = {
         return function(tab) { self.dummyTabs[windowId] = tab; };
     },
 
-    getUrlForDummyTab: function(favIconUrl) {
+    getUrlForDummyTab: function() {
         return 'placeholder.html?startupUrl=' + encodeURIComponent(this.startupUrl) + '&currentUrl=' +
-            encodeURIComponent(this.currentUrl) + '&favIconUrl=' + favIconUrl;
+            encodeURIComponent(this.currentUrl) + '&favIconUrl=' + encodeURIComponent(this.favIconUrl) + '&title=' +
+            encodeURIComponent(this.title);
     },
 
     updateRealTab: function(realTab) {
         this.realTab = realTab;
-        if(realTab.favIconUrl)
-            this.sendMessageToDummyWindows('favIconUrl', this.realTab.favIconUrl);
+        if(realTab.favIconUrl != this.favIconUrl) {
+            this.favIconUrl = realTab.favIconUrl;
+            this.sendMessageToDummyWindows('favIconUrl', this.favIconUrl);
+        }
         if(realTab.url != this.currentUrl) {
             this.currentUrl = realTab.url;
             this.sendMessageToDummyWindows('currentUrl', this.currentUrl);
+        }
+        if(realTab.title != this.title) {
+            this.title = realTab.title;
+            this.sendMessageToDummyWindows('title', this.title);
         }
     },
 

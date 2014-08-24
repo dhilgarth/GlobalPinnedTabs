@@ -11,7 +11,7 @@ GloballyPinnedTabs.create = function(serializedTabs) {
     }];
 
     var result = new GloballyPinnedTabs(serializedTabs.map(function(x) {
-        return new GloballyPinnedTab(x.startupUrl, x.currentUrl);
+        return new GloballyPinnedTab(x.startupUrl, x.currentUrl, x.favIconUrl, x.title);
     }));
 
     var onCloseCallback = function(pinnedTab) {
@@ -30,7 +30,7 @@ GloballyPinnedTabs.prototype = {
 
     addTab: function(tab) {
         var self = this;
-        var newTab = new GloballyPinnedTab(tab.url, tab.url, function(pinnedTab) {
+        var newTab = new GloballyPinnedTab(tab.url, tab.url, tab.favIconUrl, tab.title, function(pinnedTab) {
             self.onPinnedTabClosed(pinnedTab);
         });
         this.tabs.push(newTab);

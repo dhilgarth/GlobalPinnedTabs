@@ -27,12 +27,14 @@ if (!link) {
 var searchString = new SearchString(document.location.search);
 
 link.href = searchString.parameters.favIconUrl;
+document.title = searchString.parameters.title;
 
 var div = document.createElement('div');
 var setDivText = function() {
     div.innerHTML = 'Startup URL: ' + searchString.parameters.startupUrl + '<br/>';
     div.innerHTML += 'Current URL: ' + searchString.parameters.currentUrl + '<br/>';
     div.innerHTML += 'Fav icon URL: ' + searchString.parameters.favIconUrl + '<br/>';
+    div.innerHTML += 'Title: ' + searchString.parameters.title + '<br/>';
 };
 
 setDivText();
@@ -50,6 +52,10 @@ chrome.runtime.onMessage.addListener(
     }
     else if(request.type === 'currentUrl')
         searchString.parameters.currentUrl = request.data;
+    else if(request.type === 'title') {
+        searchString.parameters.title = request.data;
+        document.title = request.data;
+    }
     else
         return;
     setDivText();
