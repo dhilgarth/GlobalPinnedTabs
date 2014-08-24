@@ -60,19 +60,14 @@ var GlobalPinnedTabs = {
             return;
         chrome.windows.get(parseInt(windowId), {
             populate: true
-        }, function (window) {
+        }, Utils.errorLogger(function (window) {
             if (window.type === 'normal') {
-                try {
-                    GlobalPinnedTabs.disableTabUpdateHandling = true;
-                    Storage.globallyPinnedTabs.activateWindow(window, function () {
-                        GlobalPinnedTabs.disableTabUpdateHandling = false;
-                    });
-                }
-                catch (e) {
-                    console.log(e);
-                }
+                GlobalPinnedTabs.disableTabUpdateHandling = true;
+                Storage.globallyPinnedTabs.activateWindow(window, function () {
+                    GlobalPinnedTabs.disableTabUpdateHandling = false;
+                });
             }
-        });
+        }));
     },
 
     onWindowClosed: function (windowId) {
