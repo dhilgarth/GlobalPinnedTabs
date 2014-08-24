@@ -3,7 +3,7 @@ var GlobalPinnedTabs = {
     windowId: undefined,
     tabId: undefined,
     disableTabUpdateHandling: false,
-    instrumentMethods: true,
+    instrumentMethods: false,
 
     instrument: function () {
         Utils.instrument(
@@ -13,6 +13,7 @@ var GlobalPinnedTabs = {
         Utils.instrument(GloballyPinnedTabs.prototype, 'GloballyPinnedTabs');
         Utils.instrument(
             PeriodicExecutor.prototype, 'PeriodicExecutor', { methods: { executeStep: { mode: 'exclude' }}});
+        Utils.instrument(Storage);
     },
 
     init: function () {

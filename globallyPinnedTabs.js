@@ -208,11 +208,14 @@ GloballyPinnedTabs.prototype = {
 
         var createPinnedTabInTargetWindow = function () {
             if (targetWindow.tabs.length === (self.tabs.length - dummyTabs.missingTabs.length)) {
-                Chrome.createPinnedTab(
-                    targetWindow, 'about:blank', function (tab) {
-                        temporaryTabIds.push(tab.id);
-                        performMove();
-                    });
+                setTimeout(
+                    function () {
+                        Chrome.createPinnedTab(
+                            targetWindow, 'about:blank', function (tab) {
+                                temporaryTabIds.push(tab.id);
+                                performMove();
+                            });
+                    }, 200);
             }
             else {
                 performMove();
