@@ -62,9 +62,23 @@ var GlobalPinnedTabs = {
             populate: true
         }, Utils.errorLogger(function (window) {
             if (window.type === 'normal') {
-                GlobalPinnedTabs.disableTabUpdateHandling = true;
-                Storage.globallyPinnedTabs.activateWindow(window, function () {
-                    GlobalPinnedTabs.disableTabUpdateHandling = false;
+                Chrome.isUserDragging(function (userIsDragging) {
+                    console.log('User is dragging: ' + userIsDragging);
+                    if (!userIsDragging) {
+                        GlobalPinnedTabs.disableTabUpdateHandling = true;
+                        Storage.globallyPinnedTabs.activateWindow(window, function () {
+                            GlobalPinnedTabs.disableTabUpdateHandling = false;
+                        });
+                    } else {
+                        Chrome.executeWhenUserStoppedDragging(function() {
+                            chrome.windows.getLastFocused(function(window) {
+                                GlobalPinnedTabs.disableTabUpdateHandling = true;
+                                Storage.globallyPinnedTabs.activateWindow(window, function () {
+                                    GlobalPinnedTabs.disableTabUpdateHandling = false;
+                                });
+                            });
+                        });
+                    }
                 });
             }
         }));

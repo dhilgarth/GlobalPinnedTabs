@@ -14,6 +14,8 @@
     "background": {
         "scripts": [
             "utils.js",
+            "periodicExecutor.js",
+            "multiDelegate.js",
             "chrome.js",
             "globallyPinnedTab.js",
             "globallyPinnedTabs.js",

@@ -1,6 +1,8 @@
 var Chrome = {
-    init: function () {
 
+    init: function () {
+        Chrome.tabDraggingExecutor = new PeriodicExecutor(500);
+        Chrome.tabDraggingDelegate = new MultiDelegate();
     },
 
     errorLogger: function (f) {
@@ -31,6 +33,35 @@ var Chrome = {
                 return y === x.url;
             }).length > 0) && x.pinned;
         })[0];
+    },
+
+    executeWhenUserStoppedDragging: function (action) {
+        Chrome.tabDraggingDelegate.add(action);
+        if (!Chrome.tabDraggingExecutor.isExecuting) {
+            Chrome.tabDraggingExecutor.start(function () {
+                Chrome.isUserDragging(function (userIsDragging) {
+                    if (!userIsDragging) {
+                        Chrome.tabDraggingExecutor.stop();
+                        Chrome.tabDraggingDelegate.execute(this);
+                        Chrome.tabDraggingDelegate.clear();
+                    }
+                })
+            });
+        }
+    },
+
+    isUserDragging: function (callback) {
+        chrome.windows.getAll({ populate: true }, function (windows) {
+            var window = windows.filter(function (x) {
+                return x.type === 'normal' && x.focused && x.tabs && x.tabs.length;
+            })[0];
+            if (window === undefined)
+                return;
+            var tab = window.tabs[0];
+            chrome.tabs.move(tab.id, { index: tab.index }, function () {
+                callback(chrome.runtime.lastError !== undefined && chrome.runtime.lastError.message.indexOf('dragging') !== -1);
+            });
+        });
     },
 
     createPinnedTab: function (window, url, favIconUrl, callback) {
@@ -70,18 +101,7 @@ var Chrome = {
             if (!(tabs instanceof Array))
                 tabs = [ tabs ];
 
-            var lastError = chrome.runtime.lastError;
-            if (tabs === undefined || lastError !== undefined) {
-                console.warn("Couldn't move tabs.");
-                if (lastError !== undefined && lastError.message)
-                    console.warn('Reason: ' + lastError.message);
-                setTimeout(function () {
-                    Chrome.moveTabs(tabIds, targetWindowId, index, callback, startTime);
-                }, 500);
-            }
-            else {
-                Utils.handleUndefinedCallback(callback(tabs));
-            }
+            Utils.handleUndefinedCallback(callback)(tabs);
         }));
     }
 };
