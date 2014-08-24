@@ -9,6 +9,12 @@ var Chrome = {
         }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
     },
 
+    getWindow: function (windowId, callback) {
+        chrome.windows.get(windowId, {
+            populate: true
+        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
+    },
+
     findPinnedTab: function (urls, window) {
         if (!window.tabs)
             return undefined;
@@ -33,6 +39,11 @@ var Chrome = {
             pinned: true
         }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
     },
+
+    activateTab: function (tabId, callback) {
+        chrome.tabs.update(tabId, {
+            active: true
+        }, Utils.errorLogger(Utils.handleUndefinedCallback(callback)));
     },
 
     moveTabs: function (tabIds, targetWindowId, index, callback, startTime) {
