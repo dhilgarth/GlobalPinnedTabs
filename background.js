@@ -4,17 +4,17 @@ var GlobalPinnedTabs = {
     tabId: undefined,
     disableTabUpdateHandling: false,
 
-    init: function() {
+    init: function () {
         ArrayExtensions.init();
         Chrome.init();
-        Storage.loadData(function() {
+        Storage.loadData(function () {
             GlobalPinnedTabs.createTabs();
         });
 
         GlobalPinnedTabs.registerForChromeEvents();
     },
 
-    registerForChromeEvents: function() {
+    registerForChromeEvents: function () {
         chrome.windows.onFocusChanged.addListener(GlobalPinnedTabs.onActiveWindowChanged);
         chrome.windows.onCreated.addListener(GlobalPinnedTabs.onNewWindowCreated);
         chrome.windows.onRemoved.addListener(GlobalPinnedTabs.onWindowClosed);
@@ -42,43 +42,45 @@ var GlobalPinnedTabs = {
         // });
     },
 
-    createTabs: function() {
-        Chrome.getAllWindows(function(windows) { Storage.globallyPinnedTabs.createTabs(windows); });
+    createTabs: function () {
+        Chrome.getAllWindows(function (windows) {
+            Storage.globallyPinnedTabs.createTabs(windows);
+        });
     },
 
-    onNewWindowCreated: function(window) {
+    onNewWindowCreated: function (window) {
         console.log('new window');
-        if(window.type === 'normal')
+        if (window.type === 'normal')
             Storage.globallyPinnedTabs.createTabsForWindow(window);
     },
 
-    onActiveWindowChanged: function(windowId) {
+    onActiveWindowChanged: function (windowId) {
         console.log('active window changed');
         if (windowId === chrome.windows.WINDOW_ID_NONE)
             return;
         chrome.windows.get(parseInt(windowId), {
             populate: true
-        }, function(window) {
+        }, function (window) {
             if (window.type === 'normal') {
-                try{
+                try {
                     GlobalPinnedTabs.disableTabUpdateHandling = true;
-                    Storage.globallyPinnedTabs.activateWindow(window, function() {
+                    Storage.globallyPinnedTabs.activateWindow(window, function () {
                         GlobalPinnedTabs.disableTabUpdateHandling = false;
                     });
                 }
-                catch (e){
+                catch (e) {
                     console.log(e);
                 }
             }
         });
     },
 
-    onWindowClosed: function(windowId) {
+    onWindowClosed: function (windowId) {
         console.log('window closed');
         Storage.globallyPinnedTabs.handleClosedWindow(windowId);
     },
 
-    onTabUpdated: function(tabId, changeInfo, tab) {
+    onTabUpdated: function (tabId, changeInfo, tab) {
         if (GlobalPinnedTabs.disableTabUpdateHandling)
             return;
         if (changeInfo.pinned !== undefined) {
@@ -94,8 +96,8 @@ var GlobalPinnedTabs = {
         }
     },
 
-    onTabClosed: function(tabId, removeInfo) {
-        if(!removeInfo.isWindowClosing)
+    onTabClosed: function (tabId, removeInfo) {
+        if (!removeInfo.isWindowClosing)
             Storage.globallyPinnedTabs.handleClosedTab(tabId);
     }
 };
